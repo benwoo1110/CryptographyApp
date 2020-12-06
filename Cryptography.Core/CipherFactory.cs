@@ -35,12 +35,12 @@ namespace Cryptography.Core
 
         public CipherResult RunCipher(string input, string key)
         {
-            if (selectedCipher == null)
+            if (selectedCipher == null || input == null || key == null)
             {
-                throw new InvalidOperationException("Invalid selected cipher.");
+                throw new ArgumentException();
             }
             
-            CipherResult result = new CipherResult(input, key, CipherMode);
+            CipherResult result = new CipherResult(TextType, input, key, CipherMode);
 
             BigInteger? parsedInput = Utilities.ConvertToBigInt(input, TextType);
             if (parsedInput == null)
@@ -56,8 +56,14 @@ namespace Cryptography.Core
                 return result;
             }
 
-            result.ValidInput = Utilities.ConvertValidationResult(selectedCipher.IsValidInput((int) parsedInput)); 
-            result.ValidKey = Utilities.ConvertValidationResult(selectedCipher.IsValidInput((int) parsedInput));
+            BigInteger targetInput = (BigInteger) parsedInput;
+            BigInteger targetKey = (BigInteger) parsedKey;
+
+            result.InputNumber = targetInput;
+            result.KeyNumber = targetKey;
+
+            result.ValidInput = Utilities.ConvertValidationResult(selectedCipher.IsValidInput(targetInput)); 
+            result.ValidKey = Utilities.ConvertValidationResult(selectedCipher.IsValidInput(targetKey));
 
             if (!result.HasValidInputAndKey())
             {
@@ -65,9 +71,10 @@ namespace Cryptography.Core
             }
             
             BigInteger output = CipherMode.Equals(Mode.Encrypt)
-                ? selectedCipher.Encrypt((BigInteger) parsedInput, (BigInteger) parsedKey)
-                : selectedCipher.Decrypt( (BigInteger) parsedInput, (BigInteger) parsedKey);
+                ? selectedCipher.Encrypt(targetInput, targetKey)
+                : selectedCipher.Decrypt( targetInput, targetKey);
 
+            result.OutputNumber = output;
             result.OutputText = Utilities.ConvertToString(output, TextType);
 
             return result;

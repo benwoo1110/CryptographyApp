@@ -40,7 +40,7 @@ namespace Cryptography.Core
                 throw new ArgumentException();
             }
             
-            CipherResult result = new CipherResult(TextType, input, key, CipherMode);
+            CipherResult result = new CipherResult(selectedCipher.Name, TextType, input, key, CipherMode);
 
             BigInteger? parsedInput = Utilities.ConvertToBigInt(input, TextType);
             if (parsedInput == null)

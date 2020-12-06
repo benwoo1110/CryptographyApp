@@ -22,12 +22,15 @@ namespace Cryptography.Core
 
         public BigInteger OutputNumber { get; set; }
         
+        public string CipherName { get; set; }
+        
         public InputType TextType { get; set; }
         
         public Mode CipherMode { get; set; }
 
-        public CipherResult(InputType textType, string inputText, string keyText, Mode cipherMode)
+        public CipherResult(string cipherName, InputType textType, string inputText, string keyText, Mode cipherMode)
         {
+            CipherName = cipherName;
             TextType = textType;
             InputText = inputText;
             KeyText = keyText;
@@ -44,13 +47,15 @@ namespace Cryptography.Core
         public override string ToString()
         {
             return new StringBuilder()
+                .Append("Cipher Name: ").Append(CipherName).Append("\n")
+                .Append("Text Type: ").Append(TextType).Append("\n")
+                .Append("Cipher Mode: ").Append(CipherMode).Append("\n")
                 .Append("Input Text: ").Append(InputText).Append("\n")
                 .Append("Key Text: ").Append(KeyText).Append("\n")
                 .Append("Input State: ").Append(ValidInput).Append("\n")
                 .Append("Key State: ").Append(ValidKey).Append("\n")
                 .Append("Input Number: ").Append(InputNumber).Append("\n")
                 .Append("Key Number: ").Append(KeyNumber).Append("\n")
-                .Append("Cipher Mode: ").Append(CipherMode).Append("\n")
                 .Append("Output Number: ").Append(OutputNumber).Append("\n")
                 .Append("Output Text: ").Append(OutputText).Append("\n")
                 .ToString();

@@ -14,12 +14,12 @@ namespace Cryptography.Core.Ciphers
 
         public override bool IsValidInput(BigInteger text)
         {
-            return true;
+            return Utilities.NumberOfBits(text) > 1;
         }
 
         public override bool IsValidKey(BigInteger key)
         {
-            return true;
+            return Utilities.NumberOfBits(key) > 1;
         }
 
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
@@ -29,11 +29,6 @@ namespace Cryptography.Core.Ciphers
 
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
-            Console.WriteLine(ciphertext);
-            Console.WriteLine(key);
-            Console.WriteLine(ciphertext - key);
-
-            
             return ciphertext - key;
         }
     }

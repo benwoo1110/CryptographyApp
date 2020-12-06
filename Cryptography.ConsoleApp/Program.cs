@@ -20,7 +20,7 @@ namespace Cryptography.ConsoleApp
             cipherFactory.SelectCipher("SimpleTest");
 
             cipherFactory.CipherMode = Mode.Decrypt;
-            CipherResult result = cipherFactory.RunCipher("F0", "20");
+            CipherResult result = cipherFactory.RunCipher("0", "20");
             
             Console.WriteLine(result);
         }

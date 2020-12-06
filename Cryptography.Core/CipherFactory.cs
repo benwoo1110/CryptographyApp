@@ -18,6 +18,8 @@ namespace Cryptography.Core
         public CipherFactory()
         {
             ciphers = new Dictionary<string, Cipher>();
+            TextType = InputType.Hex;
+            CipherMode = Mode.Encrypt;
         }
 
         public void RegisterCipher(Cipher cipher)
@@ -47,7 +49,7 @@ namespace Cryptography.Core
                 return result;
             }
             
-            BigInteger? parsedKey = Utilities.ConvertToBigInt(input, TextType);
+            BigInteger? parsedKey = Utilities.ConvertToBigInt(key, TextType);
             if (parsedKey == null)
             {
                 result.ValidKey = TextOutcome.ParseError;
@@ -57,11 +59,11 @@ namespace Cryptography.Core
             result.ValidInput = Utilities.ConvertValidationResult(selectedCipher.IsValidInput((int) parsedInput)); 
             result.ValidKey = Utilities.ConvertValidationResult(selectedCipher.IsValidInput((int) parsedInput));
 
-            if (result.ValidInput.Equals(TextOutcome.Invalid) || result.ValidKey.Equals(TextOutcome.Invalid))
+            if (!result.HasValidInputAndKey())
             {
                 return result;
             }
-
+            
             BigInteger output = CipherMode.Equals(Mode.Encrypt)
                 ? selectedCipher.Encrypt((BigInteger) parsedInput, (BigInteger) parsedKey)
                 : selectedCipher.Decrypt( (BigInteger) parsedInput, (BigInteger) parsedKey);

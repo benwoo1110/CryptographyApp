@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Cryptography.Core.Ciphers
 {
@@ -13,22 +14,27 @@ namespace Cryptography.Core.Ciphers
 
         public override bool IsValidInput(BigInteger text)
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public override bool IsValidKey(BigInteger key)
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
         {
-            throw new System.NotImplementedException();
+            return plaintext + key;
         }
 
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine(ciphertext);
+            Console.WriteLine(key);
+            Console.WriteLine(ciphertext - key);
+
+            
+            return ciphertext - key;
         }
     }
 }

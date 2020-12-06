@@ -6,6 +6,7 @@ namespace Cryptography.Core.Enums
     {
         Valid,
         Invalid,
-        ParseError
+        ParseError,
+        Unknown
     }
 }

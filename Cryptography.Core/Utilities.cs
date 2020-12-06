@@ -96,7 +96,7 @@ namespace Cryptography.Core
         private static string IntToBin(BigInteger value)
         {
             StringBuilder sb = new StringBuilder();
-            while (value != 0)
+            while (value > 0)
             {
                  sb.Insert(0, value % 2 == 0 ? '0' : '1');
                  value /= 2;
@@ -108,7 +108,7 @@ namespace Cryptography.Core
         public static int NumberOfBits(BigInteger value)
         {
             int number = 0;
-            while (value != 0)
+            while (value > 0)
             { 
                 value /= 2;
                 number++;

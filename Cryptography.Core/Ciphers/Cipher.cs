@@ -1,4 +1,6 @@
-﻿namespace Cryptography.Core.Ciphers
+﻿using System.Numerics;
+
+namespace Cryptography.Core.Ciphers
 {
     public abstract class Cipher
     {
@@ -17,27 +19,27 @@
          *
          * returns true if valid.
          */
-        public abstract bool IsValidInput(int text);
+        public abstract bool IsValidInput(BigInteger text);
         
         /*
          * Ensure that number of bits for key can be used for algorithm.
          *
          * returns true if valid.
          */
-        public abstract bool IsValidKey(int key);
+        public abstract bool IsValidKey(BigInteger key);
 
         /*
          * Converts plaintext into ciphertext with key given.
          *
          * returns ciphertext.
          */
-        public abstract ulong Encrypt(ulong plaintext, ulong key);
+        public abstract BigInteger Encrypt(BigInteger plaintext, BigInteger key);
         
         /*
          * Converts ciphertext into plaintext with key given.
          *
          * returns plaintext.
          */
-        public abstract ulong Decrypt(ulong ciphertext, ulong key);
+        public abstract BigInteger Decrypt(BigInteger ciphertext, BigInteger key);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Cryptography.Core.Ciphers;
 using Cryptography.Core.Enums;
 
 namespace Cryptography.Core
 {
-    public class CipherManager
+    public class CipherFactory
     {
         private Dictionary<string, Cipher> ciphers;
         private Cipher selectedCipher;
@@ -14,7 +15,7 @@ namespace Cryptography.Core
         
         public Mode CipherMode { get; set; }
 
-        public CipherManager()
+        public CipherFactory()
         {
             ciphers = new Dictionary<string, Cipher>();
         }
@@ -39,26 +40,31 @@ namespace Cryptography.Core
             
             CipherResult result = new CipherResult(input, key, CipherMode);
 
-            ulong? parsedInput = Utilities.ConvertToInt(input, TextType);
+            BigInteger? parsedInput = Utilities.ConvertToBigInt(input, TextType);
             if (parsedInput == null)
             {
                 result.ValidInput = TextOutcome.ParseError;
                 return result;
             }
             
-            ulong? parsedKey = Utilities.ConvertToInt(input, TextType);
+            BigInteger? parsedKey = Utilities.ConvertToBigInt(input, TextType);
             if (parsedKey == null)
             {
                 result.ValidKey = TextOutcome.ParseError;
                 return result;
             }
 
-            Utilities.ConvertValidationResult(selectedCipher.IsValidInput((int) parsedInput)); 
-            Utilities.ConvertValidationResult(selectedCipher.IsValidInput((int) parsedInput));
+            result.ValidInput = Utilities.ConvertValidationResult(selectedCipher.IsValidInput((int) parsedInput)); 
+            result.ValidKey = Utilities.ConvertValidationResult(selectedCipher.IsValidInput((int) parsedInput));
 
-            ulong output = CipherMode.Equals(Mode.Encrypt)
-                ? selectedCipher.Encrypt((ulong) parsedInput, (ulong) parsedKey)
-                : selectedCipher.Decrypt((ulong) parsedInput, (ulong) parsedKey);
+            if (result.ValidInput.Equals(TextOutcome.Invalid) || result.ValidKey.Equals(TextOutcome.Invalid))
+            {
+                return result;
+            }
+
+            BigInteger output = CipherMode.Equals(Mode.Encrypt)
+                ? selectedCipher.Encrypt((BigInteger) parsedInput, (BigInteger) parsedKey)
+                : selectedCipher.Decrypt( (BigInteger) parsedInput, (BigInteger) parsedKey);
 
             result.OutputText = Utilities.ConvertToString(output, TextType);
 

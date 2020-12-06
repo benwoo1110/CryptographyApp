@@ -1,4 +1,6 @@
-﻿namespace Cryptography.Core.Ciphers
+﻿using System.Numerics;
+
+namespace Cryptography.Core.Ciphers
 {
     public class SimpleTest : Cipher
     {
@@ -9,22 +11,22 @@
             
         }
 
-        public override bool IsValidInput(int text)
+        public override bool IsValidInput(BigInteger text)
         {
             throw new System.NotImplementedException();
         }
 
-        public override bool IsValidKey(int key)
+        public override bool IsValidKey(BigInteger key)
         {
             throw new System.NotImplementedException();
         }
 
-        public override ulong Encrypt(ulong plaintext, ulong key)
+        public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
         {
             throw new System.NotImplementedException();
         }
 
-        public override ulong Decrypt(ulong ciphertext, ulong key)
+        public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
             throw new System.NotImplementedException();
         }

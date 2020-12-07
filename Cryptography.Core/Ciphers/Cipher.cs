@@ -19,14 +19,14 @@ namespace Cryptography.Core.Ciphers
          *
          * returns true if valid.
          */
-        public abstract bool IsValidInput(BigInteger text);
+        public abstract bool IsValidInput(BigInteger value);
         
         /*
          * Ensure that number of bits for key can be used for algorithm.
          *
          * returns true if valid.
          */
-        public abstract bool IsValidKey(BigInteger key);
+        public abstract bool IsValidKey(BigInteger value);
 
         /*
          * Converts plaintext into ciphertext with key given.

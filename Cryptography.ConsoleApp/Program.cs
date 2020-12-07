@@ -17,10 +17,10 @@ namespace Cryptography.ConsoleApp
             cipherFactory.RegisterCipher(new Twofish());
             cipherFactory.RegisterCipher(new SimpleTest());
 
-            cipherFactory.SelectCipher("SimpleTest");
+            cipherFactory.SelectCipher("IDEA");
 
-            cipherFactory.CipherMode = Mode.Decrypt;
-            CipherResult result = cipherFactory.RunCipher("0", "20");
+            cipherFactory.CipherMode = Mode.Encrypt;
+            CipherResult result = cipherFactory.RunCipher("05320a6414c819fa", "006400c8012c019001f4025802bc0320");
             
             Console.WriteLine(result);
         }

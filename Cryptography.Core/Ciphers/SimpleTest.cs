@@ -12,14 +12,14 @@ namespace Cryptography.Core.Ciphers
             
         }
 
-        public override bool IsValidInput(BigInteger text)
+        public override bool IsValidInput(BigInteger value)
         {
-            return Utilities.NumberOfBits(text) > 1;
+            return Utilities.NumberOfBits(value) > 1;
         }
 
-        public override bool IsValidKey(BigInteger key)
+        public override bool IsValidKey(BigInteger value)
         {
-            return Utilities.NumberOfBits(key) > 1;
+            return Utilities.NumberOfBits(value) > 1;
         }
 
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)

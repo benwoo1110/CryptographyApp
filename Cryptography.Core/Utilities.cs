@@ -116,7 +116,7 @@ namespace Cryptography.Core
             return number;
         }
         
-        public static TextOutcome ConvertValidationResult(bool result)
+        public static TextOutcome ValidationResult(bool result)
         {
             return result ? TextOutcome.Valid : TextOutcome.Invalid;
         }

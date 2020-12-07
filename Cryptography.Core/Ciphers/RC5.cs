@@ -11,12 +11,12 @@ namespace Cryptography.Core.Ciphers
             
         }
 
-        public override bool IsValidInput(BigInteger text)
+        public override bool IsValidInput(BigInteger value)
         {
             throw new System.NotImplementedException();
         }
 
-        public override bool IsValidKey(BigInteger key)
+        public override bool IsValidKey(BigInteger value)
         {
             throw new System.NotImplementedException();
         }

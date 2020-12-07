@@ -62,8 +62,8 @@ namespace Cryptography.Core
             result.InputNumber = targetInput;
             result.KeyNumber = targetKey;
 
-            result.ValidInput = Utilities.ConvertValidationResult(selectedCipher.IsValidInput(targetInput)); 
-            result.ValidKey = Utilities.ConvertValidationResult(selectedCipher.IsValidInput(targetKey));
+            result.ValidInput = Utilities.ValidationResult(selectedCipher.IsValidInput(targetInput)); 
+            result.ValidKey = Utilities.ValidationResult(selectedCipher.IsValidKey(targetKey));
 
             if (!result.HasValidInputAndKey())
             {

@@ -121,9 +121,9 @@ namespace Cryptography.Core
             return number;
         }
         
-        public static TextOutcome ValidationResult(bool result)
+        public static ConvertResult ValidationResult(bool result)
         {
-            return result ? TextOutcome.Valid : TextOutcome.Invalid;
+            return result ? ConvertResult.Valid : ConvertResult.Invalid;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Cryptography.Core.Enums
 {
-    public enum TextOutcome
+    public enum ConvertResult
     {
         Valid,
         Invalid,

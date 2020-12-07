@@ -46,7 +46,7 @@ namespace Cryptography.UnitTests
         }
 
         [Test]
-        public void ConvertToString_Binary_ReturnString()
+        public void ConvertToString_WhenCalled_ReturnBinaryString()
         {
             string result = Utilities.ConvertToString(BigInteger.Parse("5552913087"), InputType.Binary);
 
@@ -54,7 +54,7 @@ namespace Cryptography.UnitTests
         }
         
         [Test]
-        public void ConvertToString_Hex_ReturnString()
+        public void ConvertToString_WhenCalled_ReturnHexString()
         {
             string result = Utilities.ConvertToString(BigInteger.Parse("58269367470490382358246580833377976136"), InputType.Hex);
             
@@ -62,7 +62,7 @@ namespace Cryptography.UnitTests
         }
         
         [Test]
-        public void ConvertToString_Decimal_ReturnString()
+        public void ConvertToString_WhenCalled_ReturnDecimalString()
         {
             string result = Utilities.ConvertToString(BigInteger.Parse("189732465783642956328495689237465234654"), InputType.Decimal);
             
@@ -70,7 +70,7 @@ namespace Cryptography.UnitTests
         }
         
         [Test]
-        public void ConvertToString_Ascii_ReturnString()
+        public void ConvertToString_WhenCalled_ReturnAsciiString()
         {
             string result = Utilities.ConvertToString(BigInteger.Parse("87521618088882533792115812"), InputType.Ascii);
             
@@ -78,15 +78,13 @@ namespace Cryptography.UnitTests
         }
         
         [Test]
-        public void NumberOfBits_WhenCalled_ReturnNumber()
+        [TestCase("15", 4)]
+        [TestCase("5552913087", 33)]
+        public void NumberOfBits_WhenCalled_ReturnNumber(string number, int bitLength)
         {
-            BigInteger? num = Utilities.ConvertToBigInt("2BD6459F82C5B300952C49104881FF48", InputType.Hex);
+            int result = Utilities.NumberOfBits(BigInteger.Parse(number));
             
-            Console.WriteLine(Utilities.ConvertToString((BigInteger) num, InputType.Binary));
-
-            int result = Utilities.NumberOfBits((BigInteger) num);
-            
-            Assert.That(result, Is.EqualTo(126));
+            Assert.That(result, Is.EqualTo(bitLength));
         }
     }
 }

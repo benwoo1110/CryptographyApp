@@ -37,47 +37,62 @@ namespace Cryptography.Core
         {
             if (selectedCipher == null || input == null || key == null)
             {
-                throw new ArgumentException();
+                throw new ArgumentNullException();
             }
             
-            CipherResult result = new CipherResult(selectedCipher.Name, TextType, input, key, CipherMode);
+            CipherResult result = new CipherResult(selectedCipher.Name, TextType, CipherMode, input, key);
 
-            BigInteger? parsedInput = Utilities.ConvertToBigInt(input, TextType);
+            ParseCipherInputs(input, key, result);
+            if (result.HasParsingErrors())
+            {
+                return result;
+            }
+
+            ValidateCipherInputs(result);
+            if (result.HasInvalidInputAndKey())
+            {
+                return result;
+            }
+
+            ExecuteCipherAlgorithm(result);
+            
+            return result;
+        }
+
+        private void ParseCipherInputs(string input, string key, CipherResult result)
+        {
+            BigInteger? parsedInput = Utilities.ConvertToBigInt(input, result.TextType);
             if (parsedInput == null)
             {
-                result.ValidInput = TextOutcome.ParseError;
-                return result;
+                result.ValidInput = ConvertResult.ParseError;
+                return;
             }
             
-            BigInteger? parsedKey = Utilities.ConvertToBigInt(key, TextType);
+            BigInteger? parsedKey = Utilities.ConvertToBigInt(key, result.TextType);
             if (parsedKey == null)
             {
-                result.ValidKey = TextOutcome.ParseError;
-                return result;
+                result.ValidKey = ConvertResult.ParseError;
+                return;
             }
 
-            BigInteger targetInput = (BigInteger) parsedInput;
-            BigInteger targetKey = (BigInteger) parsedKey;
+            result.InputNumber = (BigInteger) parsedInput;
+            result.KeyNumber = (BigInteger) parsedKey;
+        }
 
-            result.InputNumber = targetInput;
-            result.KeyNumber = targetKey;
+        private void ValidateCipherInputs(CipherResult result)
+        {
+            result.ValidInput = Utilities.ValidationResult(selectedCipher.IsValidInput(result.InputNumber)); 
+            result.ValidKey = Utilities.ValidationResult(selectedCipher.IsValidKey(result.KeyNumber));
+        }
 
-            result.ValidInput = Utilities.ValidationResult(selectedCipher.IsValidInput(targetInput)); 
-            result.ValidKey = Utilities.ValidationResult(selectedCipher.IsValidKey(targetKey));
-
-            if (!result.HasValidInputAndKey())
-            {
-                return result;
-            }
-            
-            BigInteger output = CipherMode.Equals(Mode.Encrypt)
-                ? selectedCipher.Encrypt(targetInput, targetKey)
-                : selectedCipher.Decrypt( targetInput, targetKey);
+        private void ExecuteCipherAlgorithm(CipherResult result)
+        {
+            BigInteger output = result.CipherMode.Equals(Mode.Encrypt)
+                ? selectedCipher.Encrypt(result.InputNumber, result.KeyNumber)
+                : selectedCipher.Decrypt( result.InputNumber, result.KeyNumber);
 
             result.OutputNumber = output;
-            result.OutputText = Utilities.ConvertToString(output, TextType);
-
-            return result;
+            result.OutputText = Utilities.ConvertToString(output, result.TextType);
         }
     }
 }

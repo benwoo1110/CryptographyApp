@@ -6,9 +6,9 @@ namespace Cryptography.Core
 {
     public class CipherResult
     {
-        public TextOutcome ValidInput { get; set; }
+        public ConvertResult ValidInput { get; set; }
         
-        public TextOutcome ValidKey { get; set; }
+        public ConvertResult ValidKey { get; set; }
         
         public string InputText { get; set; }
         
@@ -28,20 +28,25 @@ namespace Cryptography.Core
         
         public Mode CipherMode { get; set; }
 
-        public CipherResult(string cipherName, InputType textType, string inputText, string keyText, Mode cipherMode)
+        public CipherResult(string cipherName, InputType textType, Mode cipherMode, string inputText, string keyText)
         {
             CipherName = cipherName;
             TextType = textType;
+            CipherMode = cipherMode;
             InputText = inputText;
             KeyText = keyText;
-            CipherMode = cipherMode;
-            ValidInput = TextOutcome.Unknown;
-            ValidKey = TextOutcome.Unknown;
+            ValidInput = ConvertResult.Unknown;
+            ValidInput = ConvertResult.Unknown;
         }
 
-        public bool HasValidInputAndKey()
+        public bool HasParsingErrors()
         {
-            return ValidInput.Equals(TextOutcome.Valid) && ValidKey.Equals(TextOutcome.Valid);
+            return ValidInput.Equals(ConvertResult.ParseError) || ValidKey.Equals(ConvertResult.ParseError);
+        }
+
+        public bool HasInvalidInputAndKey()
+        {
+            return !ValidInput.Equals(ConvertResult.Valid) || !ValidKey.Equals(ConvertResult.Valid);
         }
 
         public override string ToString()

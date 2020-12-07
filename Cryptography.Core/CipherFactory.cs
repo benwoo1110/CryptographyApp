@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Cryptography.Core.Ciphers;
 using Cryptography.Core.Enums;
@@ -8,7 +9,7 @@ namespace Cryptography.Core
 {
     public class CipherFactory
     {
-        private Dictionary<string, Cipher> ciphers;
+        private readonly Dictionary<string, Cipher> ciphers;
         private Cipher selectedCipher;
 
         public InputType TextType { get; set; }
@@ -18,12 +19,16 @@ namespace Cryptography.Core
         public CipherFactory()
         {
             ciphers = new Dictionary<string, Cipher>();
-            TextType = InputType.Hex;
-            CipherMode = Mode.Encrypt;
+            Reset();
         }
 
         public void RegisterCipher(Cipher cipher)
         {
+            if (ciphers.ContainsKey(cipher.Name))
+            {
+                throw new ArgumentException("You cannot register ciphers with the same name!");
+            }
+            
             ciphers.Add(cipher.Name, cipher);
         }
 
@@ -93,6 +98,33 @@ namespace Cryptography.Core
 
             result.OutputNumber = output;
             result.OutputText = Utilities.ConvertToString(output, result.TextType);
+        }
+
+        public string GetCurrentSelected()
+        {
+            return HasAnySelected() ? selectedCipher.Name : null;
+        }
+        
+        public bool HasAnySelected()
+        {
+            return selectedCipher != null;
+        }
+
+        public string[] GetAvailableCiphers()
+        {
+            return ciphers.Keys.ToArray();
+        }
+
+        public bool HasSuchCipher(string cipherName)
+        {
+            return ciphers.ContainsKey(cipherName);
+        }
+
+        public void Reset()
+        {
+            selectedCipher = null;
+            TextType = InputType.Hex;
+            CipherMode = Mode.Encrypt;
         }
     }
 }

@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography.UnitTests", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography.ConsoleApp", "Cryptography.ConsoleApp\Cryptography.ConsoleApp.csproj", "{BA09E185-9E95-4512-908F-E2F2307DA655}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography.WinFormsApp", "Cryptography.WinFormsApp\Cryptography.WinFormsApp.csproj", "{3E9BCD8F-8662-4378-A2DD-13AA15DB7505}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{BA09E185-9E95-4512-908F-E2F2307DA655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA09E185-9E95-4512-908F-E2F2307DA655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA09E185-9E95-4512-908F-E2F2307DA655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E9BCD8F-8662-4378-A2DD-13AA15DB7505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E9BCD8F-8662-4378-A2DD-13AA15DB7505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E9BCD8F-8662-4378-A2DD-13AA15DB7505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E9BCD8F-8662-4378-A2DD-13AA15DB7505}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

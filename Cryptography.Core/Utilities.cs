@@ -15,7 +15,7 @@ namespace Cryptography.Core
                 switch (type)
                 {
                     case InputType.Hex:
-                        return BigInteger.Parse("0" + value, NumberStyles.HexNumber);
+                        return BigInteger.Parse("0" + RemoveLeadingValue(value, "0x"), NumberStyles.HexNumber);
                     case InputType.Decimal:
                         return BigInteger.Parse(value, NumberStyles.Integer);
                     case InputType.Binary:
@@ -69,7 +69,7 @@ namespace Cryptography.Core
             switch (type)
             {
                 case InputType.Hex:
-                    return value.ToString("X");
+                    return RemoveLeadingValue(value.ToString("X"), "0");
                 case InputType.Decimal:
                     return value.ToString();
                 case InputType.Binary:
@@ -79,6 +79,11 @@ namespace Cryptography.Core
             }
 
             return null;
+        }
+
+        private static string RemoveLeadingValue(string value, string toRemove)
+        {
+            return value.StartsWith(toRemove) ? value.Substring(toRemove.Length) : value;
         }
 
         private static string IntToAscii(BigInteger value)

@@ -2,19 +2,38 @@
 using System.Numerics;
 using System.Windows.Forms;
 using Cryptography.Core;
+using Cryptography.Core.Ciphers;
 using Cryptography.Core.Enums;
 
 namespace Cryptography.WinFormsApp
 {
     partial class CryptoApp
     {
+        private MainMenu menu;
+
+        private CipherFactory cipherFactory;
+        
+        private readonly Color errorRed = System.Drawing.ColorTranslator.FromHtml("#ffcccb");
+
+        private void InitCipherFactory()
+        {
+            menu = new MainMenu(this);
+            
+            cipherFactory = new CipherFactory();
+            
+            cipherFactory.RegisterCipher(new Blowfish());
+            cipherFactory.RegisterCipher(new IDEA());
+            cipherFactory.RegisterCipher(new RC5());
+            cipherFactory.RegisterCipher(new Twofish());
+        }
+        
         private void SwitchModeButton()
         {
             cipherFactory.CipherMode = cipherFactory.CipherMode == Mode.Encrypt ? Mode.Decrypt : Mode.Encrypt; 
-            AppleModeButton();
+            ApplyModeButton();
         }
 
-        private void AppleModeButton()
+        private void ApplyModeButton()
         {
             if (cipherFactory.CipherMode == Mode.Encrypt)
             {
@@ -42,7 +61,7 @@ namespace Cryptography.WinFormsApp
             BigInteger? parsedNumber = Utilities.ConvertToBigInt(textBox.Text, cipherFactory.TextType);
             if (parsedNumber == null)
             {
-                textBox.BackColor = Color.Red;
+                textBox.BackColor = errorRed;
                 bitsLabel.Text = "-";
                 return;
             }
@@ -54,6 +73,11 @@ namespace Cryptography.WinFormsApp
         private void ShowErrorMessage(string title, string description)
         {
             MessageBox.Show(description, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        
+        void OpenMenuForm()
+        {
+            menu.Show();
         }
     }
 }

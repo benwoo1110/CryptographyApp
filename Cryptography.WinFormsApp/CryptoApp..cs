@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Cryptography.Core;
 using Cryptography.Core.Ciphers;
@@ -14,20 +6,12 @@ using Cryptography.Core.Enums;
 
 namespace Cryptography.WinFormsApp
 {
-    public partial class CryptoApp : Form
+    public partial class CryptoApp : NavForm
     {
-        private CipherFactory cipherFactory;
-        
         public CryptoApp()
         {
             InitializeComponent();
-            
-            cipherFactory = new CipherFactory();
-            
-            cipherFactory.RegisterCipher(new Blowfish());
-            cipherFactory.RegisterCipher(new IDEA());
-            cipherFactory.RegisterCipher(new RC5());
-            cipherFactory.RegisterCipher(new Twofish());
+            InitCipherFactory();
         }
 
         private void CryptoApp_Load(object sender, EventArgs e)
@@ -46,7 +30,7 @@ namespace Cryptography.WinFormsApp
             
             TextTypeBox.SelectedItem = TextTypeBox.Items[0];
             
-            AppleModeButton();
+            ApplyModeButton();
         }
         
         private void CipherAlgorithmBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -84,11 +68,13 @@ namespace Cryptography.WinFormsApp
 
         private void CipherMode_Click(object sender, EventArgs e)
         {
-            SwitchModeButton();
+            // SwitchModeButton();
+            OpenMenuForm();
         }
 
         private void CalculateBtn_Click(object sender, EventArgs e)
         {
+            
             CipherResult result = cipherFactory.RunCipher(InputText.Text, KeyText.Text);
 
             if (result.HasParsingErrors())

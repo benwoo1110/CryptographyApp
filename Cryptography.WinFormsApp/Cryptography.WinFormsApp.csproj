@@ -14,6 +14,9 @@
       <Compile Update="CryptoApp.Backend.cs">
         <DependentUpon>CryptoApp..cs</DependentUpon>
       </Compile>
+      <Compile Update="MainMenu.cs">
+        <SubType>Form</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>

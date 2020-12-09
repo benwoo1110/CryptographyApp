@@ -27,6 +27,7 @@ namespace Cryptography.UnitTests
         [TestCase("db2d4a92aa68273f", "000102030405060708090a0b0c0d0e0f", "11223344556677")]
         [TestCase("f129a6601ef62a47", "2bd6459f82c5b300952c49104881ff48", "ea024714ad5c4d84")]
         [TestCase("28886d814399e782", "ffffffffffffffffffffffffffffffff", "ffffffffffffffff")]
+        [TestCase("F29166203ADB7263", "BAD123649FFF2903645ACFFE19038134", "E84CC601BF8B2C8F")]
         public void RunCipher_EncryptWithIDEA_ReturnCipherResult(string plaintext, string key, string ciphertext)
         {
             cipherFactory.RegisterCipher(new IDEA());
@@ -37,7 +38,7 @@ namespace Cryptography.UnitTests
             CipherResult result = cipherFactory.RunCipher(plaintext, key);
 
             Assert.That(result.OutputText, Is.Not.Null);
-            Assert.That(result.OutputText.ToLower(), Is.EqualTo(ciphertext));
+            Assert.That(result.OutputText.ToLower(), Is.EqualTo(ciphertext.ToLower()));
         }
     }
 }

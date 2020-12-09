@@ -60,7 +60,6 @@ namespace Cryptography.Core
                 sb.AppendFormat("{0:X2}", (int) c);
             }
             
-            Console.WriteLine(sb.ToString());
             return BigInteger.Parse(sb.ToString(), NumberStyles.HexNumber);
         }
 

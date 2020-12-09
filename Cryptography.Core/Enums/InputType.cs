@@ -2,9 +2,9 @@
 {
     public enum InputType
     {
-        Ascii,
         Hex,
         Decimal,
-        Binary
+        Binary,
+        Ascii
     }
 }

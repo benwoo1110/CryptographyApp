@@ -10,4 +10,10 @@
       <ProjectReference Include="..\Cryptography.Core\Cryptography.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="CryptoApp.Backend.cs">
+        <DependentUpon>CryptoApp..cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

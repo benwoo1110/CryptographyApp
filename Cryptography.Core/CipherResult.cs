@@ -49,6 +49,11 @@ namespace Cryptography.Core
             return !ValidInput.Equals(ConvertResult.Valid) || !ValidKey.Equals(ConvertResult.Valid);
         }
 
+        public bool HasOutput()
+        {
+            return OutputText != null;
+        }
+
         public override string ToString()
         {
             return new StringBuilder()

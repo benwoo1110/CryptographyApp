@@ -66,7 +66,6 @@ namespace Cryptography.Core.Ciphers
             BigInteger modulus = new BigInteger(1) << 128;
             List<BigInteger> subKeys = new List<BigInteger>();
 
-            Console.WriteLine(key);
             for (int i = 0; i < 54; i++)
             { 
                 subKeys.Add((key >> (112 - 16 * (i % 8))) % 0x10000);

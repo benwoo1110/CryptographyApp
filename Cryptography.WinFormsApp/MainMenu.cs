@@ -3,16 +3,26 @@ using System.Windows.Forms;
 
 namespace Cryptography.WinFormsApp
 {
-    public partial class MainMenu : NavForm
+    public partial class MainMenu : CryptoForm
     {
-        public MainMenu(NavForm parentForm) : base(parentForm)
+        private readonly CryptoForm conversionTool;
+        private readonly CryptoForm cipherTool;
+        
+        public MainMenu()
         {
             InitializeComponent();
+            conversionTool = new ConversionTool(this);
+            cipherTool = new CipherTool(this);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void CipherPageBtn_Click(object sender, EventArgs e)
         {
-            Back();
+            cipherTool.Show();
+        }
+
+        private void ConversionPageBtn_Click(object sender, EventArgs e)
+        {
+            conversionTool.Show();
         }
     }
 }

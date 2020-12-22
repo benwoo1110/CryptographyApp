@@ -11,10 +11,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="CryptoApp.Backend.cs">
+      <Compile Update="CipherToolBackend.cs">
         <DependentUpon>CryptoApp..cs</DependentUpon>
       </Compile>
       <Compile Update="MainMenu.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="ConversionTool.cs">
         <SubType>Form</SubType>
       </Compile>
     </ItemGroup>

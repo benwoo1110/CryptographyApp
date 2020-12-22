@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Cryptography.Core;
 using Cryptography.Core.Ciphers;
@@ -6,36 +7,38 @@ using Cryptography.Core.Enums;
 
 namespace Cryptography.WinFormsApp
 {
-    public partial class CryptoApp : NavForm
+    public partial class CipherTool : CryptoForm
     {
-        public CryptoApp()
+        private CipherFactory cipherFactory;
+        
+        public CipherTool(CryptoForm parentForm) : base(parentForm)
         {
             InitializeComponent();
-            InitCipherFactory();
-        }
-
-        private void CryptoApp_Load(object sender, EventArgs e)
-        {
-            foreach (var availableCipher in cipherFactory.GetAvailableCiphers())
-            {
-                CipherAlgorithmBox.Items.Add(availableCipher);
-            }
-
-            CipherAlgorithmBox.SelectedItem = CipherAlgorithmBox.Items[0];
             
-            foreach (InputType type in Enum.GetValues(typeof(InputType)))
-            {
-                TextTypeBox.Items.Add(type.ToString());
-            }
+            cipherFactory = new CipherFactory();
             
-            TextTypeBox.SelectedItem = TextTypeBox.Items[0];
+            cipherFactory.RegisterCipher(new Blowfish());
+            cipherFactory.RegisterCipher(new IDEA());
+            cipherFactory.RegisterCipher(new RC5());
+            cipherFactory.RegisterCipher(new Twofish());
+            
+            InitComboBox(CipherAlgorithmBox, cipherFactory.GetAvailableCiphers());
+            InitComboBoxWithInputType(TextTypeBox);
             
             ApplyModeButton();
         }
         
+        private void BackBtn_Click(object sender, EventArgs e)
+        {
+            Back();
+        }
+
         private void CipherAlgorithmBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cipherFactory.SelectCipher(CipherAlgorithmBox.Text);
+            if (!cipherFactory.SelectCipher(CipherAlgorithmBox.Text))
+            {
+                // TODO: show error message box
+            }
         }
         
         private void TextTypeBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,8 +50,9 @@ namespace Cryptography.WinFormsApp
             }
 
             cipherFactory.TextType = parsed;
+            
             UpdateBits(InputText, InputBits);
-            UpdateBits(KeyText, KeyBits); 
+            UpdateBits(KeyText, KeyBits);
         }
         
         private void InputText_TextChanged(object sender, EventArgs e)
@@ -68,8 +72,7 @@ namespace Cryptography.WinFormsApp
 
         private void CipherMode_Click(object sender, EventArgs e)
         {
-            // SwitchModeButton();
-            OpenMenuForm();
+            SwitchModeButton();
         }
 
         private void CalculateBtn_Click(object sender, EventArgs e)
@@ -96,6 +99,33 @@ namespace Cryptography.WinFormsApp
             }
 
             OutputText.Text = result.OutputText;
+        }
+
+        private void UpdateBits(RichTextBox textBox, Label bitsLabel)
+        {
+            UpdateBits(textBox, bitsLabel, cipherFactory.TextType);
+        }
+
+        private void SwitchModeButton()
+        {
+            cipherFactory.CipherMode = cipherFactory.CipherMode == Mode.Encrypt ? Mode.Decrypt : Mode.Encrypt; 
+            ApplyModeButton();
+        }
+
+        private void ApplyModeButton()
+        {
+            if (cipherFactory.CipherMode == Mode.Encrypt)
+            {
+                CipherModeBtn.BackColor = Color.MediumSeaGreen;
+                CipherModeBtn.Text = "Mode: Encrypt";
+                InputLabel.Text = "Plain Text:";
+                OutputLabel.Text = "Cipher Text:";
+                return;
+            }
+            CipherModeBtn.BackColor = Color.IndianRed;
+            CipherModeBtn.Text = "Mode: Decrypt";
+            InputLabel.Text = "Cipher Text:";
+            OutputLabel.Text = "Plain Text:";
         }
     }
 }

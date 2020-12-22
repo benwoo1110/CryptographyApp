@@ -13,7 +13,7 @@ namespace Cryptography.Core.Ciphers
 
         public override bool IsValidInput(BigInteger value)
         {
-            throw new System.NotImplementedException();
+            return false;
         }
 
         public override bool IsValidKey(BigInteger value)

@@ -14,22 +14,25 @@ namespace Cryptography.Core.Ciphers
 
         public override bool IsValidInput(BigInteger value)
         {
-            return Utilities.NumberOfBits(value) > 1;
+            // At most 128 bits
+            // int -> storage up to 32 bit number so we use BigInteger
+            return Utilities.NumberOfBits(value) <= 128;
         }
 
         public override bool IsValidKey(BigInteger value)
         {
-            return Utilities.NumberOfBits(value) > 1;
+            throw new System.NotImplementedException();
         }
 
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
         {
-            return plaintext + key;
+            BigInteger cipherText = plaintext + key;
+            return cipherText;
         }
 
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
-            return ciphertext - key;
+            throw new System.NotImplementedException();
         }
     }
 }

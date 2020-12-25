@@ -307,10 +307,10 @@ namespace Cryptography.Core.Ciphers
         private List<BigInteger> splitKey(BigInteger key)
         {
             List<BigInteger> keyList = new List<BigInteger>();
-            for (int i = 0; i <= 14; i++)
+            for (int i = 0; i < 14; i++)
             {
                 BigInteger tempKey = key & 0xFFFFFFFF;
-                keyList.Add(tempKey);
+                keyList.Insert(0, tempKey);
                 key = key >> 32;
             }
 
@@ -378,7 +378,7 @@ namespace Cryptography.Core.Ciphers
         {
             List<BigInteger> keyList = splitKey(key);
             
-            for (int i = 0; i < 18; i++)
+            for (int i = 0; i < 1; i++)
             {
                 p[i] = p[i] ^ keyList[i % 14];
             }
@@ -404,7 +404,7 @@ namespace Cryptography.Core.Ciphers
         {
             BigInteger left = ciphertext >> 32;
             BigInteger right = ciphertext & 0xFFFFFFFF;
-            for (int i = 17; i > 0 ; i--)
+            for (int i = 17; i > 1 ; i--)
             {
                 left = p[i] ^ left;
                 BigInteger left1 = FFunc(left);

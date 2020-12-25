@@ -16,14 +16,14 @@ namespace Cryptography.ConsoleApp
             cipherFactory.RegisterCipher(new Blowfish());
             cipherFactory.RegisterCipher(new IDEA());
 
-<<<<<<< HEAD
+
             cipherFactory.SelectCipher("Blowfish");
 
             cipherFactory.CipherMode = Mode.Encrypt;
             CipherResult result = cipherFactory.RunCipher(Utilities.ConvertToString(BigInteger.Parse("2343464") , InputType.Hex), "4B7A70E9B5B32944DB75092EC4192623AD6EA6B049A7DF7D9CEE60B88FEDB266ECAA8C71699A17FF5664526CC2B19EE1193602A575094C29");
             
             Console.WriteLine(result);
-=======
+
             // Set cipher algorithm to use
             if (cipherFactory.SelectCipher("IDEA"))
             {
@@ -56,7 +56,6 @@ namespace Cryptography.ConsoleApp
             }
 
             Console.WriteLine(result.ToString());
->>>>>>> 7dcbe6f7d0f6acfe4e328f34acad999dd9f8f518
         }
     }
 }

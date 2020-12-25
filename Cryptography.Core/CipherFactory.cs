@@ -31,6 +31,28 @@ namespace Cryptography.Core
             
             ciphers.Add(cipher.Name, cipher);
         }
+        
+        public bool SetCipherMode(string cipherMode)
+        {
+            if (Enum.TryParse(Utilities.Capitalise(cipherMode), out Mode mode))
+            {
+                CipherMode = mode;
+                return true;
+            }
+
+            return false;
+        }
+        
+        public bool SetTextType(string textType)
+        {
+            if (Enum.TryParse(Utilities.Capitalise(textType), out InputType type))
+            {
+                TextType = type;
+                return true;
+            }
+
+            return false;
+        }
 
         public bool SelectCipher(string cipherName)
         {

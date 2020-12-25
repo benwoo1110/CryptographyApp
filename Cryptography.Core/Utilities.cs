@@ -124,5 +124,10 @@ namespace Cryptography.Core
         {
             return result ? ConvertResult.Valid : ConvertResult.Invalid;
         }
+
+        public static String Capitalise(String word)
+        {
+            return char.ToUpper(word[0]) + word.Substring(1); 
+        }
     }
 }

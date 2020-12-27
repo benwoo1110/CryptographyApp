@@ -9,6 +9,9 @@ namespace Cryptography.Core
 {
     public class CipherFactory
     {
+        public const InputType DefaultTextType = InputType.Hex;
+        public const Mode DefaultCipherMode = Mode.Encrypt;
+        
         private readonly Dictionary<string, Cipher> ciphers;
         private Cipher selectedCipher;
 
@@ -168,8 +171,8 @@ namespace Cryptography.Core
         public void Reset()
         {
             selectedCipher = null;
-            TextType = InputType.Hex;
-            CipherMode = Mode.Encrypt;
+            TextType = DefaultTextType;
+            CipherMode = DefaultCipherMode;
         }
     }
 }

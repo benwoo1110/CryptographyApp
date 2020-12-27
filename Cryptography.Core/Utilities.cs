@@ -134,8 +134,9 @@ namespace Cryptography.Core
 
         public static string TrimText(string text)
         {
-            return text.Replace(" ", "")
-                .Replace("\t", "");
+            return (string.IsNullOrEmpty(text))
+                ? text 
+                : text.Replace(" ", "").Replace("\t", "");
         }
     }
 }

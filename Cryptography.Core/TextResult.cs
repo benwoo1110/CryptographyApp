@@ -9,7 +9,7 @@ namespace Cryptography.Core
         
         public string Text { get; set; }
 
-        public BigInteger Number { get; set; }
+        public BigInteger Number { get; set; } = BigInteger.MinusOne;
 
         public ConvertResult State { get; set; } = ConvertResult.Unknown;
 

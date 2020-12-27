@@ -1,26 +1,26 @@
 ﻿using System.Numerics;
+using Cryptography.Core;
+using Cryptography.Core.Ciphers;
 
-namespace Cryptography.Core.Ciphers
+namespace Cryptography.UnitTests
 {
-    public class SimpleTest : Cipher
+    public class MockCipher : Cipher
     {
-        private const string CipherName = "SimpleTest";
+        private const string CipherName = "MockCipher";
         
-        public SimpleTest() : base(CipherName)
+        public MockCipher() : base(CipherName)
         {
             
         }
 
         public override bool IsValidInput(BigInteger value)
         {
-            // At most 128 bits
-            // int -> storage up to 32 bit number so we use BigInteger
-            return Utilities.NumberOfBits(value) <= 128;
+            return Utilities.NumberOfBits(value) <= 16;
         }
 
         public override bool IsValidKey(BigInteger value)
         {
-            throw new System.NotImplementedException();
+            return Utilities.NumberOfBits(value) <= 8;
         }
 
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
@@ -31,7 +31,8 @@ namespace Cryptography.Core.Ciphers
 
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
-            throw new System.NotImplementedException();
+            BigInteger plaintext = ciphertext - key;
+            return plaintext;
         }
     }
 }

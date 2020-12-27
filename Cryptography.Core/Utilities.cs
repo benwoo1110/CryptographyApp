@@ -131,5 +131,11 @@ namespace Cryptography.Core
                 ? ""
                 : char.ToUpper(word[0]) + word.Substring(1).ToLower(); 
         }
+
+        public static string TrimText(string text)
+        {
+            return text.Replace(" ", "")
+                .Replace("\t", "");
+        }
     }
 }

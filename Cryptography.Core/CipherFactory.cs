@@ -69,7 +69,10 @@ namespace Cryptography.Core
 
         public CipherResult RunCipher(string input, string key)
         {
-            if (selectedCipher == null || input == null || key == null)
+            input = Utilities.TrimText(input);
+            key = Utilities.TrimText(key);
+            
+            if (selectedCipher == null || string.IsNullOrEmpty(input) || string.IsNullOrEmpty(key))
             {
                 throw new ArgumentNullException();
             }

@@ -41,14 +41,16 @@ namespace Cryptography.WinFormsApp
 
         public void UpdateBits(RichTextBox textBox, Label bitsLabel, InputType textType)
         {
-            if (textBox.Text.Length == 0)
+            String text = Utilities.TrimText(textBox.Text);
+            
+            if (string.IsNullOrEmpty(text))
             {
                 textBox.BackColor = SystemColors.Window;
                 bitsLabel.Text = "-";
                 return;
             }
-
-            BigInteger? parsedNumber = Utilities.ConvertToBigInt(textBox.Text, textType);
+            
+            BigInteger? parsedNumber = Utilities.ConvertToBigInt(text, textType);
             if (parsedNumber == null)
             {
                 textBox.BackColor = errorRed;

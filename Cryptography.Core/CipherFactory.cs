@@ -27,6 +27,11 @@ namespace Cryptography.Core
 
         public void RegisterCipher(Cipher cipher)
         {
+            if (cipher == null)
+            {
+                throw new ArgumentException("Cannot register null cipher!");
+            }
+            
             string name = cipher.Name.ToLower();
             if (ciphers.ContainsKey(name))
             {
@@ -66,6 +71,11 @@ namespace Cryptography.Core
 
         public bool SelectCipher(string cipherName)
         {
+            if (string.IsNullOrEmpty(cipherName))
+            {
+                return false;
+            }
+            
             selectedCipher = ciphers.GetValueOrDefault(cipherName.ToLower());
             return selectedCipher != null;
         }
@@ -165,6 +175,11 @@ namespace Cryptography.Core
 
         public bool HasSuchCipher(string cipherName)
         {
+            if (string.IsNullOrEmpty(cipherName))
+            {
+                return false;
+            }
+            
             return ciphers.ContainsKey(cipherName.ToLower());
         }
 

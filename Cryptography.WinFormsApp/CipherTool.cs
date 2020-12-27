@@ -9,7 +9,7 @@ namespace Cryptography.WinFormsApp
 {
     public partial class CipherTool : CryptoForm
     {
-        private CipherFactory cipherFactory;
+        private readonly CipherFactory cipherFactory;
         
         public CipherTool(CryptoForm parentForm) : base(parentForm)
         {

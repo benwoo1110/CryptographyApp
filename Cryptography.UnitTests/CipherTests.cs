@@ -1,8 +1,5 @@
-﻿using System;
-using System.Numerics;
-using Cryptography.Core;
+﻿using System.Numerics;
 using Cryptography.Core.Ciphers;
-using Cryptography.Core.Enums;
 using NUnit.Framework;
 
 namespace Cryptography.UnitTests

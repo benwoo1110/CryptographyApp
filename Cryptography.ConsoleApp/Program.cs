@@ -1,7 +1,6 @@
 ﻿using System;
 using Cryptography.Core;
 using Cryptography.Core.Ciphers;
-using Cryptography.Core.Enums;
 
 namespace Cryptography.ConsoleApp
 {

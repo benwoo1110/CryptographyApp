@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using System.Text;
-using Cryptography.Core.Enums;
+﻿using Cryptography.Core.Enums;
 
 namespace Cryptography.Core
 {
@@ -12,11 +10,11 @@ namespace Cryptography.Core
         
         public Mode CipherMode { get; set; }
         
-        public TextResult Input { get; set; }
+        public TextResult Input { get; }
         
-        public TextResult Key { get; set; }
+        public TextResult Key { get; }
         
-        public TextResult Output { get; set; }
+        public TextResult Output { get; }
 
         public CipherResult()
         {

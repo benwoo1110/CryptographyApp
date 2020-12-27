@@ -16,11 +16,11 @@ namespace Cryptography.UnitTests
         [Test]
         public void Name_SimpleTest_ReturnCipherName()
         {
-            Cipher cipher = new SimpleTest();
+            Cipher cipher = new MockCipher();
 
             string result = cipher.Name;
 
-            Assert.That(result, Is.EqualTo("SimpleTest"));
+            Assert.That(result, Is.EqualTo("MockCipher"));
         }
 
         [Test]

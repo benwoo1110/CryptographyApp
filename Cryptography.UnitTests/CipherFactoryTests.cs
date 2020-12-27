@@ -14,6 +14,10 @@ namespace Cryptography.UnitTests
         public void Setup()
         {
             cipherFactory = new CipherFactory();
+
+            Assert.That(cipherFactory.GetCurrentSelected(), Is.Null);
+            Assert.That(cipherFactory.CipherMode, Is.EqualTo(CipherFactory.DefaultCipherMode));
+            Assert.That(cipherFactory.TextType, Is.EqualTo(CipherFactory.DefaultTextType));
         }
 
         [Test]
@@ -78,6 +82,18 @@ namespace Cryptography.UnitTests
          
             Assert.That(result, Is.False);
             Assert.That(cipherFactory.TextType, Is.EqualTo(previousMode));
+        }
+
+        [Test]
+        public void SwitchCipherMode_WhenCalled_ReturnNewMode()
+        {
+            Mode newMode = cipherFactory.SwitchCipherMode();
+
+            Assert.That(newMode, Is.EqualTo(Mode.Decrypt));
+            
+            Mode newMode2 = cipherFactory.SwitchCipherMode();
+
+            Assert.That(newMode2, Is.EqualTo(Mode.Encrypt));
         }
     }
 }

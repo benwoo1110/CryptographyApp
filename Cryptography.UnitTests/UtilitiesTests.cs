@@ -118,5 +118,19 @@ namespace Cryptography.UnitTests
 
             Assert.That(result, Is.EqualTo(expectedResult));
         }
+        
+        [Test]
+        [TestCase("have spaces ", "havespaces")]
+        [TestCase("CAPS", "CAPS")]
+        [TestCase("Tab\t Tabs\t ", "TabTabs")]
+        [TestCase("     ", "")]
+        [TestCase("", "")]
+        [TestCase(null, null)]
+        public void Capitalise_WhenCalled_ReturnTrimedText(string text, string expectedResult)
+        {
+            string result = Utilities.TrimText(text);
+
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
     }
 }

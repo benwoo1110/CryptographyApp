@@ -14,10 +14,48 @@ namespace Cryptography.UnitTests
         public void Setup()
         {
             cipherFactory = new CipherFactory();
-
+            cipherFactory.RegisterCipher(new MockCipher());
+            
             Assert.That(cipherFactory.GetCurrentSelected(), Is.Null);
             Assert.That(cipherFactory.CipherMode, Is.EqualTo(CipherFactory.DefaultCipherMode));
             Assert.That(cipherFactory.TextType, Is.EqualTo(CipherFactory.DefaultTextType));
+        }
+
+        [Test]
+        public void SelectCipher_ValidCipher_CipherIsSelected()
+        {
+            bool result = cipherFactory.SelectCipher("MockCipher");
+            
+            Assert.That(result, Is.True);
+            Assert.That(cipherFactory.HasAnySelected(), Is.True);
+            Assert.That(cipherFactory.GetCurrentSelected(), Is.EqualTo("MockCipher"));
+        }
+        
+        [Test]
+        [TestCase("None")]
+        [TestCase("")]
+        [TestCase(null)]
+        public void SelectCipher_InvalidCipher_CipherNotSelected(string cipherName)
+        {
+            bool result = cipherFactory.SelectCipher(cipherName);
+            
+            Assert.That(result, Is.False);
+            Assert.That(cipherFactory.HasAnySelected(), Is.False);
+            Assert.That(cipherFactory.GetCurrentSelected(), Is.Null);
+        }
+        
+        [Test]
+        [TestCase("MockCipher", true)]
+        [TestCase("mockcipher", true)]
+        [TestCase("MOCKCIPHER", true)]
+        [TestCase("None", false)]
+        [TestCase("", false)]
+        [TestCase(null, false)]
+        public void HasSuchCipher_WhenCalled_ReturnIfCipherPresent(string cipherName, bool expectedResult)
+        {
+            bool result = cipherFactory.HasSuchCipher(cipherName);
+
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [Test]
@@ -36,7 +74,7 @@ namespace Cryptography.UnitTests
             Assert.That(result, Is.True);
             Assert.That(cipherFactory.CipherMode, Is.EqualTo(expectedMode));
         }
-        
+
         [Test]
         [TestCase("Dncypt")]
         [TestCase("")]

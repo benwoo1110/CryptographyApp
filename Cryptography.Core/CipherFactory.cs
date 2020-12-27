@@ -24,12 +24,13 @@ namespace Cryptography.Core
 
         public void RegisterCipher(Cipher cipher)
         {
-            if (ciphers.ContainsKey(cipher.Name))
+            string name = cipher.Name.ToLower();
+            if (ciphers.ContainsKey(name))
             {
                 throw new ArgumentException("You cannot register ciphers with the same name!");
             }
             
-            ciphers.Add(cipher.Name, cipher);
+            ciphers.Add(name, cipher);
         }
         
         public bool SetCipherMode(string cipherMode)
@@ -56,7 +57,7 @@ namespace Cryptography.Core
 
         public bool SelectCipher(string cipherName)
         {
-            selectedCipher = ciphers.GetValueOrDefault(cipherName);
+            selectedCipher = ciphers.GetValueOrDefault(cipherName.ToLower());
             return selectedCipher != null;
         }
 
@@ -76,7 +77,7 @@ namespace Cryptography.Core
             }
 
             ValidateCipherInputs(result);
-            if (result.HasInvalidInputAndKey())
+            if (!result.HasValidInputAndKey())
             {
                 return result;
             }
@@ -132,14 +133,14 @@ namespace Cryptography.Core
             return selectedCipher != null;
         }
 
-        public string[] GetAvailableCiphers()
+        public List<string> GetAvailableCiphers()
         {
-            return ciphers.Keys.ToArray();
+            return ciphers.Values.ToList().ConvertAll(c => c.Name);
         }
 
         public bool HasSuchCipher(string cipherName)
         {
-            return ciphers.ContainsKey(cipherName);
+            return ciphers.ContainsKey(cipherName.ToLower());
         }
 
         public void Reset()

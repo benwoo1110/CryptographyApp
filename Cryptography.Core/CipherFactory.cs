@@ -12,9 +12,9 @@ namespace Cryptography.Core
         private readonly Dictionary<string, Cipher> ciphers;
         private Cipher selectedCipher;
 
-        public InputType TextType { get; set; }
+        public InputType TextType { get; private set; }
         
-        public Mode CipherMode { get; set; }
+        public Mode CipherMode { get; private set; }
 
         public CipherFactory()
         {
@@ -42,6 +42,12 @@ namespace Cryptography.Core
             }
 
             return false;
+        }
+
+        public Mode SwitchCipherMode()
+        {
+            CipherMode = (CipherMode == Mode.Encrypt) ? Mode.Decrypt : Mode.Encrypt;
+            return CipherMode;
         }
         
         public bool SetTextType(string textType)

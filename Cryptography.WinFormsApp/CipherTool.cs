@@ -43,13 +43,10 @@ namespace Cryptography.WinFormsApp
         
         private void TextTypeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            if (!Enum.TryParse(TextTypeBox.Text, out InputType parsed))
+            if (!cipherFactory.SetTextType(TextTypeBox.Text))
             {
                 // TODO: show error message box
             }
-
-            cipherFactory.TextType = parsed;
             
             UpdateBits(InputText, InputBits);
             UpdateBits(KeyText, KeyBits);
@@ -108,7 +105,7 @@ namespace Cryptography.WinFormsApp
 
         private void SwitchModeButton()
         {
-            cipherFactory.CipherMode = cipherFactory.CipherMode == Mode.Encrypt ? Mode.Decrypt : Mode.Encrypt; 
+            cipherFactory.SwitchCipherMode();
             ApplyModeButton();
         }
 

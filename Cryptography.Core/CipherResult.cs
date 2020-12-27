@@ -28,6 +28,10 @@ namespace Cryptography.Core
         
         public Mode CipherMode { get; set; }
 
+        public CipherResult()
+        {
+        }
+
         public CipherResult(string cipherName, InputType textType, Mode cipherMode, string inputText, string keyText)
         {
             CipherName = cipherName;
@@ -44,14 +48,14 @@ namespace Cryptography.Core
             return ValidInput.Equals(ConvertResult.ParseError) || ValidKey.Equals(ConvertResult.ParseError);
         }
 
-        public bool HasInvalidInputAndKey()
+        public bool HasValidInputAndKey()
         {
-            return !ValidInput.Equals(ConvertResult.Valid) || !ValidKey.Equals(ConvertResult.Valid);
+            return ValidInput.Equals(ConvertResult.Valid) && ValidKey.Equals(ConvertResult.Valid);
         }
 
         public bool HasOutput()
         {
-            return OutputText != null;
+            return !string.IsNullOrEmpty(OutputText);
         }
 
         public override string ToString()

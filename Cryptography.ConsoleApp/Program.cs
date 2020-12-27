@@ -41,7 +41,7 @@ namespace Cryptography.ConsoleApp
             // Run the cipher algorithm
             CipherResult result = cipherFactory.RunCipher(input, key);
 
-            if (result.HasInvalidInputAndKey())
+            if (!result.HasValidInputAndKey())
             {
                 Console.WriteLine("Invalid input/key.");
             }

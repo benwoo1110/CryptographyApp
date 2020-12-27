@@ -86,7 +86,7 @@ namespace Cryptography.WinFormsApp
                 return;
             }
 
-            if (result.HasInvalidInputAndKey())
+            if (!result.HasValidInputAndKey())
             {
                 ShowErrorMessage("Invalid Input", "text and/or key does not conform to the requirements of the cipher!");
                 return;

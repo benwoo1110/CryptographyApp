@@ -23,10 +23,10 @@ namespace Cryptography.UnitTests
         [TestCase(ConvertResult.ParseError, ConvertResult.ParseError, true)]
         public void HasParsingErrors_WhenCalled_ReturnIfHasErrors(ConvertResult input, ConvertResult key, bool expectedResult)
         {
-            cipherResult.ValidInput = input;
-            cipherResult.ValidKey = key;
+            cipherResult.Input.State = input;
+            cipherResult.Key.State = key;
 
-            Assert.That(cipherResult.HasParsingErrors, Is.EqualTo(expectedResult));
+            Assert.That(cipherResult.HasParsingErrors(), Is.EqualTo(expectedResult));
         }
     }
 }

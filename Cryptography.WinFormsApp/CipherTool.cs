@@ -22,7 +22,7 @@ namespace Cryptography.WinFormsApp
             cipherFactory.RegisterCipher(new RC5());
             cipherFactory.RegisterCipher(new Twofish());
             
-            InitComboBox(CipherAlgorithmBox, cipherFactory.GetAvailableCiphers());
+            InitComboBox(CipherAlgorithmBox, cipherFactory.GetAvailableCiphers().ToArray());
             InitComboBoxWithInputType(TextTypeBox);
             
             ApplyModeButton();
@@ -98,7 +98,7 @@ namespace Cryptography.WinFormsApp
                 return;
             }
 
-            OutputText.Text = result.OutputText;
+            OutputText.Text = result.Output.Text;
         }
 
         private void UpdateBits(RichTextBox textBox, Label bitsLabel)

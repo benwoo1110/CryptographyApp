@@ -92,35 +92,48 @@ namespace Cryptography.Core
             BigInteger? parsedInput = Utilities.ConvertToBigInt(input, result.TextType);
             if (parsedInput == null)
             {
-                result.ValidInput = ConvertResult.ParseError;
+                result.Input.State = ConvertResult.ParseError;
                 return;
             }
             
             BigInteger? parsedKey = Utilities.ConvertToBigInt(key, result.TextType);
             if (parsedKey == null)
             {
-                result.ValidKey = ConvertResult.ParseError;
+                result.Input.State = ConvertResult.ParseError;
                 return;
             }
 
-            result.InputNumber = (BigInteger) parsedInput;
-            result.KeyNumber = (BigInteger) parsedKey;
+            result.Input.Number = (BigInteger) parsedInput;
+            result.Key.Number = (BigInteger) parsedKey;
         }
 
         private void ValidateCipherInputs(CipherResult result)
         {
-            result.ValidInput = Utilities.ValidationResult(selectedCipher.IsValidInput(result.InputNumber)); 
-            result.ValidKey = Utilities.ValidationResult(selectedCipher.IsValidKey(result.KeyNumber));
+            result.Input.State = Utilities.ValidationResult(selectedCipher.IsValidInput(result.Input.Number)); 
+            result.Key.State = Utilities.ValidationResult(selectedCipher.IsValidKey(result.Key.Number));
         }
 
         private void ExecuteCipherAlgorithm(CipherResult result)
         {
             BigInteger output = result.CipherMode.Equals(Mode.Encrypt)
-                ? selectedCipher.Encrypt(result.InputNumber, result.KeyNumber)
-                : selectedCipher.Decrypt( result.InputNumber, result.KeyNumber);
+                ? selectedCipher.Encrypt(result.Input.Number, result.Key.Number)
+                : selectedCipher.Decrypt( result.Input.Number, result.Key.Number);
 
-            result.OutputNumber = output;
-            result.OutputText = Utilities.ConvertToString(output, result.TextType);
+            result.Output.Number = output;
+            result.Output.State = Utilities.ValidationResult(selectedCipher.IsValidInput(output));
+            if (!result.Output.IsValid())
+            {
+                return;
+            }
+
+            string parsedResult = Utilities.ConvertToString(output, result.TextType);
+            if (string.IsNullOrEmpty(parsedResult))
+            {
+                result.Output.State = ConvertResult.ParseError;
+                return;
+            }
+
+            result.Output.Text = parsedResult;
         }
 
         public string GetCurrentSelected()

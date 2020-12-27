@@ -378,7 +378,7 @@ namespace Cryptography.Core.Ciphers
         {
             List<BigInteger> keyList = splitKey(key);
             
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 18; i++)
             {
                 p[i] = p[i] ^ keyList[i % 14];
             }
@@ -388,7 +388,7 @@ namespace Cryptography.Core.Ciphers
 
             for (int i = 0; i < 9; i++)
             {
-                BigInteger tempData = Decryption(data);
+                BigInteger tempData = Encryption(data);
                 p[k] = tempData >> 32;
                 k += 1;
                 p[k] = tempData & 0xFFFFFFFF;

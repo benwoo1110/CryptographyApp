@@ -1,5 +1,6 @@
 ﻿using System;
 using Cryptography.Core;
+using Cryptography.Core.Ciphers;
 using Cryptography.Core.Enums;
 using NUnit.Framework;
 
@@ -15,10 +16,37 @@ namespace Cryptography.UnitTests
         {
             cipherFactory = new CipherFactory();
             cipherFactory.RegisterCipher(new MockCipher());
-            
+
+            cipherFactory.HasSuchCipher("MockCipher");
             Assert.That(cipherFactory.GetCurrentSelected(), Is.Null);
             Assert.That(cipherFactory.CipherMode, Is.EqualTo(CipherFactory.DefaultCipherMode));
             Assert.That(cipherFactory.TextType, Is.EqualTo(CipherFactory.DefaultTextType));
+        }
+
+        [Test]
+        public void RegisterCipher_Null_ThrowArgumentException()
+        {
+            Assert.That(
+                () => cipherFactory.RegisterCipher(null),
+                Throws.ArgumentException.With.Message.Contains("null")
+            );
+        }
+        
+        [Test]
+        public void RegisterCipher_Repeated_ThrowArgumentException()
+        {
+            Assert.That(
+                () => cipherFactory.RegisterCipher(new MockCipher()),
+                Throws.ArgumentException.With.Message.Contains("same name")
+                );
+        }
+        
+        [Test]
+        public void RegisterCipher_NewValidCipher_HasSuchCipher()
+        {
+            cipherFactory.RegisterCipher(new IDEA());
+            
+            Assert.That(cipherFactory.HasSuchCipher("IDEA"));
         }
 
         [Test]
@@ -132,6 +160,20 @@ namespace Cryptography.UnitTests
             Mode newMode2 = cipherFactory.SwitchCipherMode();
 
             Assert.That(newMode2, Is.EqualTo(Mode.Encrypt));
+        }
+        
+        [Test]
+        [TestCase("8AB", "B78", "1423")]
+        [TestCase("11", "22", "33")]
+        [TestCase("1D", "A2", "BF")]
+        public void ValidInputAndKey_ReturnValidOutput(string input, string key, string output)
+        {
+            cipherFactory.SelectCipher("MockCipher");
+            Assert.That(cipherFactory.GetCurrentSelected(), Is.EqualTo("MockCipher"));
+            
+            CipherResult result = cipherFactory.RunCipher(input, key);
+            
+            Assert.That(result.Output.Text, Is.EqualTo(output));
         }
     }
 }

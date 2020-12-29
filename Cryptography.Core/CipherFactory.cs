@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using Cryptography.Core.Ciphers;
 using Cryptography.Core.Enums;
 
@@ -11,17 +10,15 @@ namespace Cryptography.Core
     {
         public const InputType DefaultTextType = InputType.Hex;
         public const Mode DefaultCipherMode = Mode.Encrypt;
-        
-        private readonly Dictionary<string, Cipher> ciphers;
-        private Cipher selectedCipher;
 
+        private Dictionary<string, Cipher> Ciphers { get; }
+        private Cipher SelectedCipher { get; set; }
         public InputType TextType { get; private set; }
-        
         public Mode CipherMode { get; private set; }
-
+        
         public CipherFactory()
         {
-            ciphers = new Dictionary<string, Cipher>();
+            Ciphers = new Dictionary<string, Cipher>();
             Reset();
         }
 
@@ -33,12 +30,12 @@ namespace Cryptography.Core
             }
             
             string name = cipher.Name.ToLower();
-            if (ciphers.ContainsKey(name))
+            if (Ciphers.ContainsKey(name))
             {
                 throw new ArgumentException("You cannot register ciphers with the same name!");
             }
             
-            ciphers.Add(name, cipher);
+            Ciphers.Add(name, cipher);
         }
         
         public bool SetCipherMode(string cipherMode)
@@ -76,101 +73,33 @@ namespace Cryptography.Core
                 return false;
             }
             
-            selectedCipher = ciphers.GetValueOrDefault(cipherName.ToLower());
-            return selectedCipher != null;
+            SelectedCipher = Ciphers.GetValueOrDefault(cipherName.ToLower());
+            return SelectedCipher != null;
         }
 
         public CipherResult RunCipher(string input, string key)
         {
-            input = Utilities.TrimText(input);
-            key = Utilities.TrimText(key);
-            
-            if (selectedCipher == null || string.IsNullOrEmpty(input) || string.IsNullOrEmpty(key))
+            if (SelectedCipher == null)
             {
-                throw new ArgumentNullException();
+                throw new InvalidOperationException("No cipher selected.");
             }
             
-            CipherResult result = new CipherResult(selectedCipher.Name, TextType, CipherMode, input, key);
-
-            ParseCipherInputs(input, key, result);
-            if (result.HasParsingErrors())
-            {
-                return result;
-            }
-
-            ValidateCipherInputs(result);
-            if (!result.HasValidInputAndKey())
-            {
-                return result;
-            }
-
-            ExecuteCipherAlgorithm(result);
-            
-            return result;
-        }
-
-        private void ParseCipherInputs(string input, string key, CipherResult result)
-        {
-            BigInteger? parsedInput = Utilities.ConvertToBigInt(input, result.TextType);
-            if (parsedInput == null)
-            {
-                result.Input.State = ConvertResult.ParseError;
-                return;
-            }
-            
-            BigInteger? parsedKey = Utilities.ConvertToBigInt(key, result.TextType);
-            if (parsedKey == null)
-            {
-                result.Input.State = ConvertResult.ParseError;
-                return;
-            }
-
-            result.Input.Number = (BigInteger) parsedInput;
-            result.Key.Number = (BigInteger) parsedKey;
-        }
-
-        private void ValidateCipherInputs(CipherResult result)
-        {
-            result.Input.State = Utilities.ValidationResult(selectedCipher.IsValidInput(result.Input.Number)); 
-            result.Key.State = Utilities.ValidationResult(selectedCipher.IsValidKey(result.Key.Number));
-        }
-
-        private void ExecuteCipherAlgorithm(CipherResult result)
-        {
-            BigInteger output = result.CipherMode.Equals(Mode.Encrypt)
-                ? selectedCipher.Encrypt(result.Input.Number, result.Key.Number)
-                : selectedCipher.Decrypt( result.Input.Number, result.Key.Number);
-
-            result.Output.Number = output;
-            result.Output.State = Utilities.ValidationResult(selectedCipher.IsValidInput(output));
-            if (!result.Output.IsValid())
-            {
-                return;
-            }
-
-            string parsedResult = Utilities.ConvertToString(output, result.TextType);
-            if (string.IsNullOrEmpty(parsedResult))
-            {
-                result.Output.State = ConvertResult.ParseError;
-                return;
-            }
-
-            result.Output.Text = parsedResult;
+            return new CipherRunInstance(SelectedCipher, CipherMode, TextType).Run(input, key);
         }
 
         public string GetCurrentSelected()
         {
-            return HasAnySelected() ? selectedCipher.Name : null;
+            return HasAnySelected() ? SelectedCipher.Name : null;
         }
         
         public bool HasAnySelected()
         {
-            return selectedCipher != null;
+            return SelectedCipher != null;
         }
 
         public List<string> GetAvailableCiphers()
         {
-            return ciphers.Values.ToList().ConvertAll(c => c.Name);
+            return Ciphers.Values.ToList().ConvertAll(c => c.Name);
         }
 
         public bool HasSuchCipher(string cipherName)
@@ -180,12 +109,12 @@ namespace Cryptography.Core
                 return false;
             }
             
-            return ciphers.ContainsKey(cipherName.ToLower());
+            return Ciphers.ContainsKey(cipherName.ToLower());
         }
 
         public void Reset()
         {
-            selectedCipher = null;
+            SelectedCipher = null;
             TextType = DefaultTextType;
             CipherMode = DefaultCipherMode;
         }

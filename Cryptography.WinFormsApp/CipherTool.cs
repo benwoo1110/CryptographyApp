@@ -37,7 +37,7 @@ namespace Cryptography.WinFormsApp
         {
             if (!cipherFactory.SelectCipher(CipherAlgorithmBox.Text))
             {
-                // TODO: show error message box
+                ShowErrorMessage("Select Cipher Error", $"There was an error setting your cipher to {CipherAlgorithmBox.Text}!");
             }
         }
         
@@ -45,7 +45,8 @@ namespace Cryptography.WinFormsApp
         {
             if (!cipherFactory.SetTextType(TextTypeBox.Text))
             {
-                // TODO: show error message box
+                ShowErrorMessage("Text Type Error", $"There was an error setting your text type to {TextTypeBox.Text}!");
+                return;
             }
             
             UpdateBits(InputText, InputBits);
@@ -77,18 +78,16 @@ namespace Cryptography.WinFormsApp
             
             CipherResult result = cipherFactory.RunCipher(InputText.Text, KeyText.Text);
 
-            if (result.HasParsingErrors())
+            if (!result.Input.IsValid())
             {
-                ShowErrorMessage("Parse Error", "There is an error in the format of your text and/or key!");
+                ShowErrorMessage($"Input Parse Error", $"There is an error in the format of your {InputTextName(result)}!");
                 return;
             }
-
-            if (!result.HasValidInputAndKey())
+            if (!result.Key.IsValid())
             {
-                ShowErrorMessage("Invalid Input", "text and/or key does not conform to the requirements of the cipher!");
+                ShowErrorMessage($"Key Parse Error", $"There is an error in the format of your Key!");
                 return;
             }
-
             if (!result.HasOutput())
             {
                 ShowErrorMessage("Cipher Error", "Hmmmm... there was an error generating the output for your cipher!");
@@ -96,6 +95,11 @@ namespace Cryptography.WinFormsApp
             }
 
             OutputText.Text = result.Output.Text;
+        }
+
+        private string InputTextName(CipherResult result)
+        {
+            return (result.CipherMode == Mode.Encrypt) ? "plain text" : "cipher text";
         }
 
         private void UpdateBits(RichTextBox textBox, Label bitsLabel)

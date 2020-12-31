@@ -37,13 +37,12 @@ namespace Cryptography.Core
         {
             input = Utilities.TrimText(input);
             key = Utilities.TrimText(key);
+            Result = new CipherResult(SelectedCipher.Name, TextType, CipherMode, input, key);
 
             if (SelectedCipher == null || string.IsNullOrEmpty(input) || string.IsNullOrEmpty(key))
             {
                 return false;
             }
-
-            Result = new CipherResult(SelectedCipher.Name, TextType, CipherMode, input, key);
             return true;
         }
 

@@ -7,8 +7,6 @@ namespace Cryptography.Core.Ciphers
 {
     public class Blowfish : Cipher
     {
-        private const string CipherName = "Blowfish";
-        
         List<BigInteger> p = new List<BigInteger>
             {
                 0x243F6A88, 0x85A308D3, 0x13198A2E, 0x03707344,
@@ -289,11 +287,7 @@ namespace Cryptography.Core.Ciphers
                 0xB74E6132, 0xCE77E25B, 0x578FDFE3, 0x3AC372E6
             }
         };
-        public Blowfish() : base(CipherName)
-        {
-            
-        }
-        
+
         public override bool IsValidInput(BigInteger value)
         {
             return Utilities.NumberOfBits(value) <= 64;

@@ -2,6 +2,7 @@
 using System.Numerics;
 using Cryptography.Core;
 using Cryptography.Core.Ciphers;
+using Cryptography.Core.Enums;
 
 namespace Cryptography.ConsoleApp
 {
@@ -60,13 +61,11 @@ namespace Cryptography.ConsoleApp
             {
                 if (selectMode == 1)
                 {
-                    cipherFactory.CipherMode = Mode.Encrypt;
                     cipherFactory.SetCipherMode("Encrypt");
                     Console.WriteLine("Selected Encryption!");
                     break;
                 } else if (selectMode == 2)
                 {
-                    cipherFactory.CipherMode = Mode.Decrypt;
                     cipherFactory.SetCipherMode("Decrypt");
                     Console.WriteLine("Selected Decryption!");
                     break;

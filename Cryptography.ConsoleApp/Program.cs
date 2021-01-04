@@ -15,11 +15,6 @@ namespace Cryptography.ConsoleApp
             cipherFactory.RegisterCipher(new Blowfish());
             cipherFactory.RegisterCipher(new IDEA());
 
-            Console.WriteLine("------ Please enter the input and key ------");
-            Console.Write("Enter input: ");
-            string input = Console.ReadLine();
-            Console.Write("Enter key: ");
-            string key = Console.ReadLine();
             
             int selectCipher = DisplayCipherMenu();
             while (true)
@@ -60,13 +55,11 @@ namespace Cryptography.ConsoleApp
             {
                 if (selectMode == 1)
                 {
-                    cipherFactory.CipherMode = Mode.Encrypt;
                     cipherFactory.SetCipherMode("Encrypt");
                     Console.WriteLine("Selected Encryption!");
                     break;
                 } else if (selectMode == 2)
                 {
-                    cipherFactory.CipherMode = Mode.Decrypt;
                     cipherFactory.SetCipherMode("Decrypt");
                     Console.WriteLine("Selected Decryption!");
                     break;
@@ -87,25 +80,21 @@ namespace Cryptography.ConsoleApp
             {
                 if (selectType == 1)
                 {
-                    result = cipherFactory.RunCipher(Utilities.ConvertToString(BigInteger.Parse(input), InputType.Decimal) , key);
                     cipherFactory.SetTextType("Decimal");
                     Console.WriteLine("Selected Decimal type!");
                     break;
                 } else if (selectType == 2)
                 {
-                    result = cipherFactory.RunCipher(Utilities.ConvertToString(BigInteger.Parse(input), InputType.Hex) , key);
                     cipherFactory.SetTextType("Hex");
                     Console.WriteLine("Selected Hex type!");
                     break;
                 } else if (selectType == 3)
                 {
-                    result = cipherFactory.RunCipher(Utilities.ConvertToString(BigInteger.Parse(input), InputType.Binary) , key);
                     cipherFactory.SetTextType("Binary");
                     Console.WriteLine("Selected Binary type!");
                     break;
                 } else if (selectType == 4)
                 {
-                    result = cipherFactory.RunCipher(Utilities.ConvertToString(BigInteger.Parse(input), InputType.Ascii) , key);
                     cipherFactory.SetTextType("Ascii");
                     Console.WriteLine("Selected Ascii type!");
                     break;
@@ -123,12 +112,11 @@ namespace Cryptography.ConsoleApp
             }
             // CipherResult result = cipherFactory.RunCipher(Utilities.ConvertToString(BigInteger.Parse("2343464") , InputType.Hex), "4B7A70E9B5B32944DB75092EC4192623AD6EA6B049A7DF7D9CEE60B88FEDB266ECAA8C71699A17FF5664526CC2B19EE1193602A575094C29");
 
-            if (!result.HasValidInputAndKey())
-            {
-                Console.WriteLine("Invalid input/key.");
-            }
-
-            Console.WriteLine(result.ToString());
+            Console.WriteLine("------ Please enter the input and key ------");
+            Console.Write("Enter input: ");
+            string input = Console.ReadLine();
+            Console.Write("Enter key: ");
+            string key = Console.ReadLine();
         }
         
         static int DisplayCipherMenu()

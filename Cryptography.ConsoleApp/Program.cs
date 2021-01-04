@@ -131,7 +131,7 @@ namespace Cryptography.ConsoleApp
                 {
                     Console.WriteLine();
                     Console.Write("Do you want to run another cipher? Y/N:");
-                    string response = Console.ReadLine();
+                    string response = Console.ReadLine().ToUpper();
                     if (response == "N")
                     {
                         Console.WriteLine("Exiting...");

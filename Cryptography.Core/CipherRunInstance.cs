@@ -56,11 +56,10 @@ namespace Cryptography.Core
             }
             Result.Input.Number = (BigInteger) parsedInput;
 
-
             BigInteger? parsedKey = Utilities.ConvertToBigInt(Result.Key.Text, TextType);
             if (parsedKey == null)
             {
-                Result.Input.State = ConvertResult.ParseError;
+                Result.Key.State = ConvertResult.ParseError;
                 return false;
             }
             Result.Key.Number = (BigInteger) parsedKey;

@@ -175,5 +175,22 @@ namespace Cryptography.UnitTests
             
             Assert.That(result.Output.Text, Is.EqualTo(output));
         }
+        
+        [Test]
+        [TestCase("8AB", "BRLK78")]
+        [TestCase("11", "WE22")]
+        [TestCase("1D", "RW")]
+        public void ValidInputAndInvalidKey_HasParseErrors(string input, string key)
+        {
+            cipherFactory.SelectCipher("MockCipher");
+            Assert.That(cipherFactory.GetCurrentSelected(), Is.EqualTo("MockCipher"));
+            
+            CipherResult result = cipherFactory.RunCipher(input, key);
+            
+            Assert.That(result.Input.HasParseError, Is.False);
+            Assert.That(result.Key.HasParseError, Is.True);
+            Assert.That(result.HasParsingErrors, Is.True);
+            Assert.That(result.HasValidInputAndKey, Is.False);
+        }
     }
 }

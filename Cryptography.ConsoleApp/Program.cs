@@ -45,7 +45,8 @@ namespace Cryptography.ConsoleApp
                     }
                     else if (selectCipher == 0)
                     {
-                        break;
+                        Console.WriteLine("Exiting...");
+                        return;
                     }
                     else
                     {
@@ -71,7 +72,8 @@ namespace Cryptography.ConsoleApp
                     }
                     else if (selectMode == 0)
                     {
-                        break;
+                        Console.WriteLine("Exiting...");
+                        return;
                     }
                     else
                     {
@@ -110,7 +112,8 @@ namespace Cryptography.ConsoleApp
                     }
                     else if (selectType == 0)
                     {
-                        break;
+                        Console.WriteLine("Exiting...");
+                        return;
                     }
                     else
                     {
@@ -130,7 +133,7 @@ namespace Cryptography.ConsoleApp
                 while (true)
                 {
                     Console.WriteLine();
-                    Console.Write("Do you want to run another cipher? Y/N:");
+                    Console.Write("Do you want to run another cipher? Y/N: ");
                     string response = Console.ReadLine().ToUpper();
                     if (response == "N")
                     {

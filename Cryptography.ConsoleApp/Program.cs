@@ -2,6 +2,7 @@
 using System.Numerics;
 using Cryptography.Core;
 using Cryptography.Core.Ciphers;
+using Cryptography.Core.Enums;
 
 namespace Cryptography.ConsoleApp
 {
@@ -13,113 +14,29 @@ namespace Cryptography.ConsoleApp
 
             cipherFactory.RegisterCipher(new Blowfish());
             cipherFactory.RegisterCipher(new IDEA());
+            
+            Menu cipherMenu = new Menu(
+                "------ Select the cipher ------",
+                cipherFactory.GetAvailableCiphers().ToArray()
+            );
+
+            Menu typeMenu = new Menu(
+                "------ Select input type ------",
+                Enum.GetNames(typeof(InputType))
+            );
+            
+            Menu modeMenu = new Menu(
+                "------ Select the mode ------",
+                Enum.GetNames(typeof(Mode))
+            );
 
             while (true)
             {
-                while (true)
-                {
-                    int selectCipher = DisplayCipherMenu();
-                    if (selectCipher == 1)
-                    {
-                        cipherFactory.SelectCipher("IDEA");
-                        Console.WriteLine("Selected IDEA cipher!");
-                        break;
-                    }
-                    else if (selectCipher == 2)
-                    {
-                        cipherFactory.SelectCipher("Blowfish");
-                        Console.WriteLine("Selected Blowfish cipher!");
-                        break;
-                    }
-                    else if (selectCipher == 3)
-                    {
-                        cipherFactory.SelectCipher("Twofish");
-                        Console.WriteLine("Selected Twofish cipher!");
-                        break;
-                    }
-                    else if (selectCipher == 4)
-                    {
-                        cipherFactory.SelectCipher("RC5");
-                        Console.WriteLine("Selected RC5 cipher!");
-                        break;
-                    }
-                    else if (selectCipher == 0)
-                    {
-                        Console.WriteLine("Exiting...");
-                        return;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid cipher! Please try again.");
-                    }
-                }
+                cipherFactory.SelectCipher(cipherMenu.GetMenuOption());
 
+                cipherFactory.SetCipherMode(modeMenu.GetMenuOption());
 
-                while (true)
-                {
-                    int selectMode = DisplayModeMenu();
-                    if (selectMode == 1)
-                    {
-                        cipherFactory.SetCipherMode("Encrypt");
-                        Console.WriteLine("Selected Encryption!");
-                        break;
-                    }
-                    else if (selectMode == 2)
-                    {
-                        cipherFactory.SetCipherMode("Decrypt");
-                        Console.WriteLine("Selected Decryption!");
-                        break;
-                    }
-                    else if (selectMode == 0)
-                    {
-                        Console.WriteLine("Exiting...");
-                        return;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid input! Please try again.");
-                    }
-                }
-
-
-
-                while (true)
-                {
-                    int selectType = DisplayTypeMenu();
-                    if (selectType == 1)
-                    {
-                        cipherFactory.SetTextType("Decimal");
-                        Console.WriteLine("Selected Decimal type!");
-                        break;
-                    }
-                    else if (selectType == 2)
-                    {
-                        cipherFactory.SetTextType("Hex");
-                        Console.WriteLine("Selected Hex type!");
-                        break;
-                    }
-                    else if (selectType == 3)
-                    {
-                        cipherFactory.SetTextType("Binary");
-                        Console.WriteLine("Selected Binary type!");
-                        break;
-                    }
-                    else if (selectType == 4)
-                    {
-                        cipherFactory.SetTextType("Ascii");
-                        Console.WriteLine("Selected Ascii type!");
-                        break;
-                    }
-                    else if (selectType == 0)
-                    {
-                        Console.WriteLine("Exiting...");
-                        return;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid type! Please try again.");
-                    }
-                }
+                cipherFactory.SetTextType(typeMenu.GetMenuOption());
 
                 Console.WriteLine();
                 Console.WriteLine("------ Please enter the input and key ------");
@@ -149,64 +66,6 @@ namespace Cryptography.ConsoleApp
                         Console.WriteLine("Invalid input. Please try again.");
                     }
                 }
-            }
-        }
-
-        static int DisplayCipherMenu()
-        {
-            Console.WriteLine();
-            Console.WriteLine("------ Select the cipher ------");
-            Console.WriteLine("[1] IDEA");
-            Console.WriteLine("[2] Blowfish");
-            Console.WriteLine("[3] TwoFish");
-            Console.WriteLine("[4] RC5");
-            Console.WriteLine("[0] Exit");
-            Console.Write("Enter option: ");
-            try
-            {
-                return Convert.ToInt32(Console.ReadLine());
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
-        }
-
-        static int DisplayModeMenu()
-        {
-            Console.WriteLine();
-            Console.WriteLine("------ Select the mode ------");
-            Console.WriteLine("[1] Encrypt");
-            Console.WriteLine("[2] Decrypt");
-            Console.WriteLine("[0] Exit");
-            Console.Write("Enter option: ");
-            try
-            {
-                return Convert.ToInt32(Console.ReadLine());
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
-        }
-
-        static int DisplayTypeMenu()
-        {
-            Console.WriteLine();
-            Console.WriteLine("------ Select input type ------");
-            Console.WriteLine("[1] Decimal");
-            Console.WriteLine("[2] Hex");
-            Console.WriteLine("[3] Binary");
-            Console.WriteLine("[4] Ascii");
-            Console.WriteLine("[0] Exit");
-            Console.Write("Enter option: ");
-            try
-            {
-                return Convert.ToInt32(Console.ReadLine());
-            }
-            catch (Exception)
-            {
-                return -1;
             }
         }
     }

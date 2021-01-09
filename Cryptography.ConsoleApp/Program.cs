@@ -13,6 +13,8 @@ namespace Cryptography.ConsoleApp
 
             cipherFactory.RegisterCipher(new Blowfish());
             cipherFactory.RegisterCipher(new IDEA());
+            cipherFactory.RegisterCipher(new Twofish());
+            cipherFactory.RegisterCipher(new RC5());
             
             Menu cipherMenu = new Menu(
                 "------ Select the cipher ------",

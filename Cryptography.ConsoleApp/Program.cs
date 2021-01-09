@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using Cryptography.Core;
 using Cryptography.Core.Ciphers;
 using Cryptography.Core.Enums;
@@ -32,39 +31,25 @@ namespace Cryptography.ConsoleApp
 
             while (true)
             {
-                cipherFactory.SelectCipher(cipherMenu.GetMenuOption());
+                cipherFactory.SelectCipher(cipherMenu.RunMenuOption());
+                cipherFactory.SetCipherMode(modeMenu.RunMenuOption());
+                cipherFactory.SetTextType(typeMenu.RunMenuOption());
 
-                cipherFactory.SetCipherMode(modeMenu.GetMenuOption());
-
-                cipherFactory.SetTextType(typeMenu.GetMenuOption());
-
-                Console.WriteLine();
+                ConsoleHelper.EmptyLine();
                 Console.WriteLine("------ Please enter the input and key ------");
-                Console.Write("Enter input: ");
-                string input = Console.ReadLine();
-                Console.Write("Enter key: ");
-                string key = Console.ReadLine();
+                string input = ConsoleHelper.GetInput("Enter input: ");
+                string key = ConsoleHelper.GetInput("Enter key: ");
+                
                 CipherResult result = cipherFactory.RunCipher(input, key);
+                
+                ConsoleHelper.EmptyLine();
+                Console.WriteLine("------ Cipher Result Report ------");
                 Console.WriteLine(result);
                 
-                while (true)
+                ConsoleHelper.EmptyLine();
+                if (!ConsoleHelper.Confirm("Do you want to run another cipher?"))
                 {
-                    Console.WriteLine();
-                    Console.Write("Do you want to run another cipher? Y/N: ");
-                    string response = Console.ReadLine().ToUpper();
-                    if (response == "N")
-                    {
-                        Console.WriteLine("Exiting...");
-                        return;
-                    }
-                    else if (response == "Y")
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid input. Please try again.");
-                    }
+                    ConsoleHelper.ExitProgram();
                 }
             }
         }

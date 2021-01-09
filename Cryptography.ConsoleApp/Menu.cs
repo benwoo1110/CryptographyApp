@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Cryptography.ConsoleApp
 {
@@ -7,6 +8,8 @@ namespace Cryptography.ConsoleApp
     {
         private readonly string header;
         private readonly string[] contents;
+        
+        private const int ExitOption = 0;
 
         public Menu(string header, string[] contents)
         {
@@ -14,7 +17,7 @@ namespace Cryptography.ConsoleApp
             this.contents = contents;
         }
 
-        public string GetMenuOption()
+        public string RunMenuOption()
         {
             ShowMenu();
             return GetInputOption();
@@ -24,32 +27,29 @@ namespace Cryptography.ConsoleApp
         {
             while (true)
             {
-                Console.Write("Enter option: ");
-                int input;
-                try
-                {
-                    input = Convert.ToInt32(Console.ReadLine());
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Input is not a number, please try again!");
-                    continue;
-                }
-                
-                if (input < 0 || input > contents.Length)
+                int input = ConsoleHelper.GetInput("Enter option: ", Convert.ToInt32);
+                if (!IsInRange(input))
                 {
                     Console.WriteLine($"Please enter a number between 0 and {contents.Length}!");
                     continue;
                 }
-                
-                if (input == 0)
+                if (IsExitOption(input))
                 {
-                    Console.WriteLine("Exiting...");
-                    Environment.Exit(0);
+                    ConsoleHelper.ExitProgram();
                 }
 
                 return contents[input - 1];
             }
+        }
+
+        private static bool IsExitOption(int input)
+        {
+            return input == ExitOption;
+        }
+
+        private bool IsInRange(int input)
+        {
+            return input >= 0 && input <= contents.Length;
         }
 
         private void ShowMenu()
@@ -59,7 +59,7 @@ namespace Cryptography.ConsoleApp
             {
                 Console.WriteLine($"[{index + 1}] {contents[index]}");
             }
-            Console.WriteLine("[0] Exit");
+            Console.WriteLine($"[{ExitOption}] Exit");
         }
     }
 }

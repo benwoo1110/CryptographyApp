@@ -1,8 +1,5 @@
-﻿using System;
-using System.Numerics;
-using Cryptography.Core;
+﻿using System.Numerics;
 using Cryptography.Core.Ciphers;
-using Cryptography.Core.Enums;
 using NUnit.Framework;
 
 namespace Cryptography.UnitTests
@@ -10,35 +7,58 @@ namespace Cryptography.UnitTests
     [TestFixture]
     public class CipherTests
     {
-        private CipherFactory cipherFactory;
-
         [SetUp]
         public void Setup()
         {
-            cipherFactory = new CipherFactory();
+            
         }
-        
+
         [Test]
-        [TestCase("0x0000000000000000", "80000000000000000000000000000000", "b1f5f7f87901370f")]
-        [TestCase("0000000000000000", "40000000000000000000000000000000", "b3927dffb6358626")]
-        [TestCase("f6f6f6f6f6f6f6f6", "f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6", "4738c2be9cdd7a95")]
-        [TestCase("c5cc7e174c80ed46", "9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e", "9e9e9e9e9e9e9e9e")]
-        [TestCase("ea024714ad5c4d84", "0x2bd6459f82c5b300952c49104881ff48", "c8fb51d3516627a8")]
-        [TestCase("db2d4a92aa68273f", "000102030405060708090a0b0c0d0e0f", "11223344556677")]
-        [TestCase("f129a6601ef62a47", "2bd6459f82c5b300952c49104881ff48", "ea024714ad5c4d84")]
-        [TestCase("28886d814399e782", "ffffffffffffffffffffffffffffffff", "ffffffffffffffff")]
-        [TestCase("F29166203ADB7263", "BAD123649FFF2903645ACFFE19038134", "E84CC601BF8B2C8F")]
-        public void RunCipher_EncryptWithIDEA_ReturnCipherResult(string plaintext, string key, string ciphertext)
+        public void Name_SimpleTest_ReturnCipherName()
         {
-            cipherFactory.RegisterCipher(new IDEA());
-            cipherFactory.SelectCipher("IDEA");
-            cipherFactory.TextType = InputType.Hex;
-            cipherFactory.CipherMode = Mode.Encrypt;
+            Cipher cipher = new MockCipher();
 
-            CipherResult result = cipherFactory.RunCipher(plaintext, key);
+            string result = cipher.Name;
 
-            Assert.That(result.OutputText, Is.Not.Null);
-            Assert.That(result.OutputText.ToLower(), Is.EqualTo(ciphertext.ToLower()));
+            Assert.That(result, Is.EqualTo("MockCipher"));
+        }
+
+        [Test]
+        [TestCase("0000000000000000", "170141183460469231731687303715884105728", "12823428160561428239")]
+        [TestCase("0000000000000000", "85070591730234615865843651857942052864", "12939543216615949862")]
+        [TestCase("17795682518166861558", "328272401029611223576431974228294039286", "5132065899320015509")]
+        [TestCase("14252905559253642566", "210841623425522655792992894016546578078", "11429747308416114334")]
+        [TestCase("16862118108961983876", "58269367470490382358246580833377976136", "14482258994785560488")]
+        [TestCase("15793361462042830655", "5233100606242806050955395731361295", "4822678189205111")]
+        [TestCase("17377603568952289863", "58269367470490382358246580833377976136", "16862118108961983876")]
+        [TestCase("2920704760302135170", "340282366920938463463374607431768211455", "18446744073709551615")]
+        [TestCase("17478863917414052451", "248322315116097096894562531538458870068", "16738971625840127119")]
+        public void Encrypt_IDEA_ReturnCipherText(string plaintext, string key, string ciphertext)
+        {
+            Cipher cipher = new IDEA();
+
+            BigInteger result = cipher.Encrypt(BigInteger.Parse(plaintext), BigInteger.Parse(key));
+            
+            Assert.That(result, Is.EqualTo(BigInteger.Parse(ciphertext)));
+        }
+
+        [Test]
+        [TestCase("0000000000000000", "170141183460469231731687303715884105728", "12823428160561428239")]
+        [TestCase("0000000000000000", "85070591730234615865843651857942052864", "12939543216615949862")]
+        [TestCase("17795682518166861558", "328272401029611223576431974228294039286", "5132065899320015509")]
+        [TestCase("14252905559253642566", "210841623425522655792992894016546578078", "11429747308416114334")]
+        [TestCase("16862118108961983876", "58269367470490382358246580833377976136", "14482258994785560488")]
+        [TestCase("15793361462042830655", "5233100606242806050955395731361295", "4822678189205111")]
+        [TestCase("17377603568952289863", "58269367470490382358246580833377976136", "16862118108961983876")]
+        [TestCase("2920704760302135170", "340282366920938463463374607431768211455", "18446744073709551615")]
+        [TestCase("17478863917414052451", "248322315116097096894562531538458870068", "16738971625840127119")]
+        public void Decrypt_IDEA_ReturnPlainText(string plaintext, string key, string ciphertext)
+        {
+            Cipher cipher = new IDEA();
+
+            BigInteger result = cipher.Decrypt(BigInteger.Parse(ciphertext), BigInteger.Parse(key));
+            
+            Assert.That(result, Is.EqualTo(BigInteger.Parse(plaintext)));
         }
     }
 }

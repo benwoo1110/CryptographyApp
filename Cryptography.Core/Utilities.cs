@@ -125,9 +125,18 @@ namespace Cryptography.Core
             return result ? ConvertResult.Valid : ConvertResult.Invalid;
         }
 
-        public static String Capitalise(String word)
+        public static string Capitalise(string word)
         {
-            return char.ToUpper(word[0]) + word.Substring(1); 
+            return (string.IsNullOrEmpty(word))
+                ? ""
+                : char.ToUpper(word[0]) + word.Substring(1).ToLower(); 
+        }
+
+        public static string TrimText(string text)
+        {
+            return (string.IsNullOrEmpty(text))
+                ? text 
+                : text.Replace(" ", "").Replace("\t", "");
         }
     }
 }

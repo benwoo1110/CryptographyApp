@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using Cryptography.Core.Ciphers;
 using Cryptography.Core.Enums;
 
@@ -9,27 +8,34 @@ namespace Cryptography.Core
 {
     public class CipherFactory
     {
-        private readonly Dictionary<string, Cipher> ciphers;
-        private Cipher selectedCipher;
+        public const InputType DefaultTextType = InputType.Hex;
+        public const Mode DefaultCipherMode = Mode.Encrypt;
 
-        public InputType TextType { get; set; }
+        private Dictionary<string, Cipher> Ciphers { get; }
+        private Cipher SelectedCipher { get; set; }
+        public InputType TextType { get; private set; }
+        public Mode CipherMode { get; private set; }
         
-        public Mode CipherMode { get; set; }
-
         public CipherFactory()
         {
-            ciphers = new Dictionary<string, Cipher>();
+            Ciphers = new Dictionary<string, Cipher>();
             Reset();
         }
 
         public void RegisterCipher(Cipher cipher)
         {
-            if (ciphers.ContainsKey(cipher.Name))
+            if (cipher == null)
+            {
+                throw new ArgumentException("Cannot register null cipher!");
+            }
+            
+            string name = cipher.Name.ToLower();
+            if (Ciphers.ContainsKey(name))
             {
                 throw new ArgumentException("You cannot register ciphers with the same name!");
             }
             
-            ciphers.Add(cipher.Name, cipher);
+            Ciphers.Add(name, cipher);
         }
         
         public bool SetCipherMode(string cipherMode)
@@ -41,6 +47,12 @@ namespace Cryptography.Core
             }
 
             return false;
+        }
+
+        public Mode SwitchCipherMode()
+        {
+            CipherMode = (CipherMode == Mode.Encrypt) ? Mode.Decrypt : Mode.Encrypt;
+            return CipherMode;
         }
         
         public bool SetTextType(string textType)
@@ -56,97 +68,55 @@ namespace Cryptography.Core
 
         public bool SelectCipher(string cipherName)
         {
-            selectedCipher = ciphers.GetValueOrDefault(cipherName);
-            return selectedCipher != null;
+            if (string.IsNullOrEmpty(cipherName))
+            {
+                return false;
+            }
+            
+            SelectedCipher = Ciphers.GetValueOrDefault(cipherName.ToLower());
+            return SelectedCipher != null;
         }
 
         public CipherResult RunCipher(string input, string key)
         {
-            if (selectedCipher == null || input == null || key == null)
+            if (SelectedCipher == null)
             {
-                throw new ArgumentNullException();
+                throw new InvalidOperationException("No cipher selected.");
             }
             
-            CipherResult result = new CipherResult(selectedCipher.Name, TextType, CipherMode, input, key);
-
-            ParseCipherInputs(input, key, result);
-            if (result.HasParsingErrors())
-            {
-                return result;
-            }
-
-            ValidateCipherInputs(result);
-            if (result.HasInvalidInputAndKey())
-            {
-                return result;
-            }
-
-            ExecuteCipherAlgorithm(result);
-            
-            return result;
-        }
-
-        private void ParseCipherInputs(string input, string key, CipherResult result)
-        {
-            BigInteger? parsedInput = Utilities.ConvertToBigInt(input, result.TextType);
-            if (parsedInput == null)
-            {
-                result.ValidInput = ConvertResult.ParseError;
-                return;
-            }
-            
-            BigInteger? parsedKey = Utilities.ConvertToBigInt(key, result.TextType);
-            if (parsedKey == null)
-            {
-                result.ValidKey = ConvertResult.ParseError;
-                return;
-            }
-
-            result.InputNumber = (BigInteger) parsedInput;
-            result.KeyNumber = (BigInteger) parsedKey;
-        }
-
-        private void ValidateCipherInputs(CipherResult result)
-        {
-            result.ValidInput = Utilities.ValidationResult(selectedCipher.IsValidInput(result.InputNumber)); 
-            result.ValidKey = Utilities.ValidationResult(selectedCipher.IsValidKey(result.KeyNumber));
-        }
-
-        private void ExecuteCipherAlgorithm(CipherResult result)
-        {
-            BigInteger output = result.CipherMode.Equals(Mode.Encrypt)
-                ? selectedCipher.Encrypt(result.InputNumber, result.KeyNumber)
-                : selectedCipher.Decrypt( result.InputNumber, result.KeyNumber);
-
-            result.OutputNumber = output;
-            result.OutputText = Utilities.ConvertToString(output, result.TextType);
+            return new CipherRunInstance(SelectedCipher, CipherMode, TextType).Run(input, key);
         }
 
         public string GetCurrentSelected()
         {
-            return HasAnySelected() ? selectedCipher.Name : null;
+            return HasAnySelected() ? SelectedCipher.Name : null;
         }
         
         public bool HasAnySelected()
         {
-            return selectedCipher != null;
+            return SelectedCipher != null;
         }
 
-        public string[] GetAvailableCiphers()
+        public List<string> GetAvailableCiphers()
         {
-            return ciphers.Keys.ToArray();
+            return Ciphers.Values.ToList().ConvertAll(c => c.Name);
         }
 
         public bool HasSuchCipher(string cipherName)
         {
-            return ciphers.ContainsKey(cipherName);
+            if (string.IsNullOrEmpty(cipherName))
+            {
+                return false;
+            }
+            
+            return Ciphers.ContainsKey(cipherName.ToLower());
         }
 
         public void Reset()
         {
-            selectedCipher = null;
-            TextType = InputType.Hex;
-            CipherMode = Mode.Encrypt;
+            SelectedCipher = null;
+            TextType = DefaultTextType;
+            CipherMode = DefaultCipherMode;
         }
     }
 }

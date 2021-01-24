@@ -35,10 +35,9 @@ namespace Cryptography.Core.Ciphers
             MagicConst1 = 0xb7e15163;
             MagicConst2 = 0x9e3779b9;
 
-            BigInteger[] TempL = { 0, 0, 0, 0 }; //temporary list
-            BigInteger[] SubkeyL = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,}; //26 subkeys
-            BigInteger[] KeyL = { 0, 0, 0, 0, 0, 0, 0, 0};
+            TempL = new BigInteger[] { 0, 0, 0, 0 }; //temporary list
+            SubkeyL = new BigInteger[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,}; //26 subkeys
+            KeyL = new BigInteger[] { 0, 0, 0, 0, 0, 0, 0, 0};
             PTblock1 = 0;
             PTblock2 = 0;
             CTblock1 = 0;
@@ -60,25 +59,24 @@ namespace Cryptography.Core.Ciphers
             return 2 * Math.Floor(value / 2) + 1;
         }
 
-        private double AddModulo(double num1, double num2)
+        private BigInteger AddModulo(BigInteger num1, BigInteger num2)
         {
-            return (num1 + num2) % Math.Pow(2, 32);
+            return (num1 + num2) % (BigInteger) Math.Pow(2, 32);
         }
 
         private BigInteger Xor(BigInteger num1, BigInteger num2)
         {
             return num1 ^ num2;
-
         }
 
-        public static BigInteger RotateLeft(this BigInteger value, int count)
+        public BigInteger RotateLeft(BigInteger value, BigInteger count)
         {
-            return (value << count) | (value >> (32 - count));
+            return (value << (int) count) | (value >> (32 - (int) count));
 }
 
-        public static uint RotateRight(this BigInteger value, int count)  //conversion problems, still facing issue
+        public BigInteger RotateRight(BigInteger value, BigInteger count)  //conversion problems, still facing issue
         {
-            return (value >> count) | (value << (32 - count));
+            return (value >> (int) count) | (value << (32 - (int) count));
         }
 
         void DividePT(BigInteger pt)

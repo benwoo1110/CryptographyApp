@@ -85,6 +85,12 @@ namespace Cryptography.Core.Ciphers
             PTblock2 = pt - PTblock1 << 16; 
         }
 
+        void DivideCT(BigInteger ct)
+        {
+            CTblock1 = ct >> 16;
+            CTblock2 = ct - PTblock1 << 16;
+        }
+
         void DivideKey(BigInteger key)
         {
             KeyL[0] = key >> 56;
@@ -134,12 +140,16 @@ namespace Cryptography.Core.Ciphers
                 j = (j + 1) % KeyLengthWord;
             }
 
-            return (S,  A , B);
         }
 
 
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
         {
+            DivideKey(key);
+            RC5_SETUP(key);
+            DividePT(plaintext);
+
+
             PTblock1 = AddModulo(PTblock1, SubkeyL[0]);        //conversion error
             PTblock2 = AddModulo(PTblock2, SubkeyL[1]);
 
@@ -148,10 +158,15 @@ namespace Cryptography.Core.Ciphers
                 PTblock1 = RotateLeft(PTblock1 ^ PTblock2, PTblock2) + SubkeyL[2 * i];    //conversion error
                 PTblock2 = RotateLeft(PTblock2 ^ PTblock1, PTblock1) + SubkeyL[2 * i + 1];
             }
+
+            BigInteger ciphertext = (PTblock1 << 16) + PTblock2;
+            return ciphertext;
         }
 
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
+            RC5_SETUP(key);
+            DivideCT(ciphertext);
 
             for (int i = 12; i > 0; i--)
             {
@@ -160,6 +175,9 @@ namespace Cryptography.Core.Ciphers
             }
             PTblock2 = CTblock2 - SubkeyL[1];
             PTblock1 = CTblock1 - SubkeyL[0];
+
+            BigInteger plaintext = (PTblock1 << 16) + PTblock2;
+            return plaintext;
         }
     }
 }

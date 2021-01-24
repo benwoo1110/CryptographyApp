@@ -7,22 +7,52 @@ namespace Cryptography.Core.Ciphers
 {
     public class RC5 : Cipher
     {
-        private const string CipherName = "RC5";
         private const int Rounds = 12;
-        
-        public RC5() : base(CipherName)
+        private int Words { get; set; }
+        private BigInteger MagicConst1 { get; set; }
+        private BigInteger MagicConst2 { get; set; }
+        private int KeyLengthByte { get; set; }
+        private int KeyLengthWord { get; set; }
+        private int WordLengthByte { get; set; }
+        private int SubkeyNo { get; set; }
+        private BigInteger[] TempL { get; set; }
+        private BigInteger[] SubkeyL { get; set; }
+        private BigInteger[] KeyL { get; set; }
+        private BigInteger PTblock1 { get; set; }
+        private BigInteger PTblock2 { get; set; }
+        private BigInteger CTblock1 { get; set; }
+        private BigInteger CTblock2 { get; set; }
+        public RC5() : base()
         {
+            Words = 32;
+            WordLengthByte = Words / 8;
+            KeyLengthByte = 16;
+
+            KeyLengthWord = KeyLengthByte / WordLengthByte;
+
+            SubkeyNo = 2*(12 + 1);
             
+            MagicConst1 = 0xb7e15163;
+            MagicConst2 = 0x9e3779b9;
+
+            BigInteger[] TempL = { 0, 0, 0, 0 }; //temporary list
+            BigInteger[] SubkeyL = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,}; //26 subkeys
+            BigInteger[] KeyL = { 0, 0, 0, 0, 0, 0, 0, 0};
+            PTblock1 = 0;
+            PTblock2 = 0;
+            CTblock1 = 0;
+            CTblock2 = 0;
         }
 
         public override bool IsValidInput(BigInteger value)
         {
-            return Utilities.NumberOfBits(value) == 16;
+            return Utilities.NumberOfBits(value) == 32;
         }
 
         public override bool IsValidKey(BigInteger value)
         {
-            return Utilities.NumberOfBits(value) == 32;
+            return Utilities.NumberOfBits(value) == 64;
         }
 
         public double Odd (double value)
@@ -41,14 +71,32 @@ namespace Cryptography.Core.Ciphers
 
         }
 
-        public static uint RotateLeft(this uint value, int count)
+        public static BigInteger RotateLeft(this BigInteger value, int count)
         {
             return (value << count) | (value >> (32 - count));
 }
 
-        public static uint RotateRight(this uint value, int count)
+        public static uint RotateRight(this BigInteger value, int count)
         {
             return (value >> count) | (value << (32 - count));
+        }
+
+        void DividePT(BigInteger pt)
+        {
+            PTblock1 = pt >> 16;
+            PTblock2 = pt - PTblock1 << 16; 
+        }
+
+        void DivideKey(BigInteger key)
+        {
+            KeyL[0] = key >> 56;
+            KeyL[1] = (key >> 48) & 0xFF;
+            KeyL[2] = (key >> 40) & 0xFFFF;
+            KeyL[3] = (key >> 32) & 0xFFFFFF;
+            KeyL[4] = (key >> 24) & 0xFFFFFFFF;
+            KeyL[5] = (key >> 16) & 0xFFFFFFFFFF;
+            KeyL[6] = (key >> 8) & 0xFFFFFFFFFFFF;
+            KeyL[7] = key & 0xFFFFFFFFFFFFFF;
         }
 
         void RC5_SETUP(BigInteger key)
@@ -61,80 +109,57 @@ namespace Cryptography.Core.Ciphers
             // length of the key in words, c = max(1, ceil(8 * b/w))
             // number of round subkeys, t = 2 * (r+1)
             // Code is designed to work with w = 32, r = 12, and b = 16'
-            BigInteger K = key;
-            double w = 16;
-            double E = 2.7182818284590451;
-            double GoldenRatio = 1.61803398874989484820458683436;
-            double p = Odd((E - 2) * Math.Pow(2, w));
-            double q = Odd((GoldenRatio - 2) * Math.Pow(2, w));
-            double r = 12;
-            double b = 4;
-            double t = 2 * (r + 1);
-            double u = w / 8;
-            double c = b / u;
-            double[] L = { 0, 0 }; //temporary list
-            double[] S = { 0, 0 }; //subkeys
 
             //convert secret key K from bytes to words 
-            double v = c - 1;
-            L[Convert.ToInt32(v)] = 0;
-            for (double i = b - 1; i != -1; i--)
+            for (int i = KeyLengthByte - 1; i != -1; i--)
             {
-                L[Convert.ToInt32(i)] = (RotateLeft(L[Convert.ToInt32(u/i)], 8)) + K[i];
+                TempL[i % WordLengthByte] = AddModulo(RotateLeft(TempL[WordLengthByte % i], 8), KeyL[i]);
             }
 
-            S[0] = p;
-            for (int i = 1; i < t; i++)
+            SubkeyL[0] = MagicConst1;
+            for (int i = 1; i < SubkeyNo; i++)
             {
-                S[i] = S[i - 1] + q;
+                SubkeyL[i] = SubkeyL[i - 1] + MagicConst2;
             }
 
-            double z = 0;
-            double j = 0;
-            double A = 0;
-            double B = 0;
-            for (double i = 0; i < 12; i++)
+            int z = 0;
+            int j = 0;
+            BigInteger A = 0;
+            BigInteger B = 0;
+            for (BigInteger i = 0; i < 12; i++)
             {
-                A = S[Convert.ToInt32(z)] = RotateLeft(AddModulo(S[Convert.ToInt32(z)], AddModulo(A, B)), 3);
-                B = L[Convert.ToInt32(j)] = RotateLeft(AddModulo(L[Convert.ToInt32(j)], AddModulo(A, B)), AddModulo(A, B));
-                z = (z + 1) % t;
-                j = (j + 1) % c;
+                A = SubkeyL[z] = RotateLeft(AddModulo(SubkeyL[z], AddModulo(A, B)), 3);
+                B = TempL[j] = RotateLeft(AddModulo(TempL[j], AddModulo(A, B)), AddModulo(A, B));
+                z = (z + 1) % SubkeyNo;
+                j = (j + 1) % KeyLengthWord;
             }
 
-            return S , A , B;
+            return (S,  A , B);
         }
 
 
-        public override BigInteger Encrypt(string plaintext, Array S)
+        public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
         {
-            string[] pt = { "0", "0" };
-            pt[0] = plaintext.Substring(0, (plaintext.Length / 2) - 1);
-            pt[1] = plaintext.Substring(plaintext.Length / 2, plaintext.Length -1);
+            PTblock1 = AddModulo(PTblock1, SubkeyL[0]);
+            PTblock2 = AddModulo(PTblock2, SubkeyL[1]);
 
-
-
-            A = AddModulo(pt[0], S[0]);
-            B = AddModulo(pt[1], S[1]);
-
-            for (i = 1; i <= r; i++)
+            for (BigInteger i = 1; i <= 12; i++)
             {
-                A = RotateLeft(A ^ B, B) + S[2 * i];
-                B = RotateLeft(B ^ A, A) + S[2 * i + 1];
+                PTblock1 = RotateLeft(PTblock1 ^ PTblock2, PTblock2) + SubkeyL[2 * i];
+                PTblock2 = RotateLeft(PTblock2 ^ PTblock1, PTblock1) + SubkeyL[2 * i + 1];
             }
-            return ct[0] = A| ct[1] = B;
         }
 
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
-            WORD i, B = ct[1], A = ct[0];
 
-            for (i = r; i > 0; i--)
+            for (BigInteger i = r; i > 0; i--)
             {
-                B = RotateRight(B - S[2 * i + 1], A) ^ A;
-                A = RotateRight(A - S[2 * i], B) ^ B;
+                CTblock2 = RotateRight(CTblock2 - SubkeyL[2 * i + 1], CTblock1) ^ CTblock1;
+                CTblock1 = RotateRight(CTblock1 - SubkeyL[2 * i], CTblock2) ^ CTblock2;
             }
-
-            return pt[1] = B - S[1]| pt[0] = A - S[0];
+            PTblock2 = CTblock2 - SubkeyL[1];
+            PTblock1 = CTblock1 - SubkeyL[0];
         }
     }
 }

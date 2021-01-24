@@ -76,7 +76,7 @@ namespace Cryptography.Core.Ciphers
             return (value << count) | (value >> (32 - count));
 }
 
-        public static uint RotateRight(this BigInteger value, int count)
+        public static uint RotateRight(this BigInteger value, int count)  //conversion problems, still facing issue
         {
             return (value >> count) | (value << (32 - count));
         }
@@ -113,7 +113,7 @@ namespace Cryptography.Core.Ciphers
             //convert secret key K from bytes to words 
             for (int i = KeyLengthByte - 1; i != -1; i--)
             {
-                TempL[i % WordLengthByte] = AddModulo(RotateLeft(TempL[WordLengthByte % i], 8), KeyL[i]);
+                TempL[i % WordLengthByte] = AddModulo(RotateLeft(TempL[WordLengthByte % i], 8), KeyL[i]);  //conversion problems
             }
 
             SubkeyL[0] = MagicConst1;
@@ -126,7 +126,9 @@ namespace Cryptography.Core.Ciphers
             int j = 0;
             BigInteger A = 0;
             BigInteger B = 0;
-            for (BigInteger i = 0; i < 12; i++)
+
+            //need to take a look at the source code, dont quite understand A = S[z] part
+            for (int i = 0; i < 12; i++)
             {
                 A = SubkeyL[z] = RotateLeft(AddModulo(SubkeyL[z], AddModulo(A, B)), 3);
                 B = TempL[j] = RotateLeft(AddModulo(TempL[j], AddModulo(A, B)), AddModulo(A, B));
@@ -140,12 +142,12 @@ namespace Cryptography.Core.Ciphers
 
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
         {
-            PTblock1 = AddModulo(PTblock1, SubkeyL[0]);
+            PTblock1 = AddModulo(PTblock1, SubkeyL[0]);        //conversion error
             PTblock2 = AddModulo(PTblock2, SubkeyL[1]);
 
-            for (BigInteger i = 1; i <= 12; i++)
+            for (int i = 1; i <= 12; i++)
             {
-                PTblock1 = RotateLeft(PTblock1 ^ PTblock2, PTblock2) + SubkeyL[2 * i];
+                PTblock1 = RotateLeft(PTblock1 ^ PTblock2, PTblock2) + SubkeyL[2 * i];    //conversion error
                 PTblock2 = RotateLeft(PTblock2 ^ PTblock1, PTblock1) + SubkeyL[2 * i + 1];
             }
         }
@@ -153,9 +155,9 @@ namespace Cryptography.Core.Ciphers
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
 
-            for (BigInteger i = r; i > 0; i--)
+            for (int i = 12; i > 0; i--)
             {
-                CTblock2 = RotateRight(CTblock2 - SubkeyL[2 * i + 1], CTblock1) ^ CTblock1;
+                CTblock2 = RotateRight(CTblock2 - SubkeyL[2 * i + 1], CTblock1) ^ CTblock1;  //conversion error
                 CTblock1 = RotateRight(CTblock1 - SubkeyL[2 * i], CTblock2) ^ CTblock2;
             }
             PTblock2 = CTblock2 - SubkeyL[1];

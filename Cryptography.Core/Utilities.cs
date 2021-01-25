@@ -8,7 +8,7 @@ namespace Cryptography.Core
 {
     public static class Utilities
     {
-        public static BigInteger? ConvertToBigInt(string value, InputType type)
+        public static BigInteger? ConvertToBigInt(string value, InputType type = InputType.Hex)
         {
             try
             {
@@ -63,12 +63,12 @@ namespace Cryptography.Core
             return BigInteger.Parse(sb.ToString(), NumberStyles.HexNumber);
         }
 
-        public static string ConvertToString(BigInteger value, InputType type)
+        public static string ConvertToString(BigInteger value, InputType type = InputType.Hex)
         {
             switch (type)
             {
                 case InputType.Hex:
-                    return RemoveLeadingValue(value.ToString("X"), "0");
+                    return value.ToString("X");
                 case InputType.Decimal:
                     return value.ToString();
                 case InputType.Binary:

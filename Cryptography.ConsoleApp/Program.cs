@@ -15,6 +15,7 @@ namespace Cryptography.ConsoleApp
             cipherFactory.RegisterCipher(new IDEA());
             cipherFactory.RegisterCipher(new Twofish());
             cipherFactory.RegisterCipher(new RC5());
+            cipherFactory.RegisterCipher(new TwoFishNew());
             
             Menu cipherMenu = new Menu(
                 "------ Select the cipher ------",

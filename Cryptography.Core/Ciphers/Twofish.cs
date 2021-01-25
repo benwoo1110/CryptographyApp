@@ -44,7 +44,7 @@ namespace Cryptography.Core.Ciphers
                 for (int i = 0; i < 128; i++)
                 {
                     ShiftBitLeft(self, block);
-                    keyArray.Add();
+                    // keyArray.Add();
                 }
             }
 

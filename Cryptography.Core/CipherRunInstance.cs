@@ -48,7 +48,7 @@ namespace Cryptography.Core
 
         private bool ParseInputs()
         {
-            BigInteger? parsedInput = Utilities.ConvertToBigInt(Result.Input.Text, TextType);
+            var parsedInput = Utilities.ConvertToBigInt(Result.Input.Text, TextType);
             if (parsedInput == null)
             {
                 Result.Input.State = ConvertResult.ParseError;
@@ -56,7 +56,7 @@ namespace Cryptography.Core
             }
             Result.Input.Number = (BigInteger) parsedInput;
 
-            BigInteger? parsedKey = Utilities.ConvertToBigInt(Result.Key.Text, TextType);
+            var parsedKey = Utilities.ConvertToBigInt(Result.Key.Text, TextType);
             if (parsedKey == null)
             {
                 Result.Key.State = ConvertResult.ParseError;
@@ -101,7 +101,7 @@ namespace Cryptography.Core
                 return;
             }
 
-            string parsedResult = Utilities.ConvertToString(Result.Output.Number, TextType);
+            var parsedResult = Utilities.ConvertToString(Result.Output.Number, TextType);
             if (string.IsNullOrEmpty(parsedResult))
             {
                 Result.Output.State = ConvertResult.ParseError;

@@ -21,22 +21,22 @@ namespace Cryptography.UnitTests
         {
             Cipher cipher = new MockCipher();
 
-            string result = cipher.Name;
+            var result = cipher.Name;
 
             Assert.That(result, Is.EqualTo("MockCipher"));
         }
 
         private void EncryptDecryptRunner<T>(string plaintext, string key, string ciphertext, InputType type) where T : Cipher
         {
-            T cipher = Activator.CreateInstance<T>();
+            var cipher = Activator.CreateInstance<T>();
             var pt = (BigInteger) Utilities.ConvertToBigInt(plaintext, type);
             var k = (BigInteger) Utilities.ConvertToBigInt(key, type);
             var ct = (BigInteger) Utilities.ConvertToBigInt(ciphertext, type);
 
-            BigInteger encryptResult = cipher.Encrypt(pt, k);
+            var encryptResult = cipher.Encrypt(pt, k);
             Assert.That(encryptResult, Is.EqualTo(ct));
 
-            BigInteger decryptResult = cipher.Decrypt(ct, k);
+            var decryptResult = cipher.Decrypt(ct, k);
             Assert.That(decryptResult, Is.EqualTo(pt));
         }
 

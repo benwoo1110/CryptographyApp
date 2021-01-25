@@ -14,16 +14,6 @@ namespace Cryptography.Core.Ciphers
         private const int KeysPerRound = 6;
         private const int KeysLastRound = 4;
 
-        public override bool IsValidInput(BigInteger value)
-        {
-            return Utilities.NumberOfBits(value) <= 64;
-        }
-
-        public override bool IsValidKey(BigInteger value)
-        {
-            return Utilities.NumberOfBits(value) <= 128;
-        }
-        
         private BigInteger MultiplyModulo(BigInteger num1, BigInteger num2)
         {
             if (num1 == 0x0000)
@@ -207,6 +197,16 @@ namespace Cryptography.Core.Ciphers
             subText = CipherLastRound(subText, subKeys.GetRange(Rounds * KeysPerRound, KeysLastRound));
 
             return CombineText(subText);
+        }
+
+        public override bool IsValidInput(BigInteger value)
+        {
+            return Utilities.NumberOfBits(value) <= 64;
+        }
+
+        public override bool IsValidKey(BigInteger value)
+        {
+            return Utilities.NumberOfBits(value) <= 128;
         }
 
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)

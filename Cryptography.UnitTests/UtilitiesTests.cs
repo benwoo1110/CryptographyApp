@@ -19,7 +19,7 @@ namespace Cryptography.UnitTests
         [TestCase("error", "")]
         public void ConvertToBigInt_Binary_ReturnsInteger(string binary, string expectedInteger)
         {
-            BigInteger? result = Utilities.ConvertToBigInt(binary, InputType.Binary);
+            var result = Utilities.ConvertToBigInt(binary, InputType.Binary);
             
             Assert.That(result.ToString(), Is.EqualTo(expectedInteger));
         }
@@ -32,7 +32,7 @@ namespace Cryptography.UnitTests
         [TestCase("error",  "")]
         public void ConvertToBigInt_Hex_ReturnsInteger(string hex, string expectedInteger)
         {
-            BigInteger? result = Utilities.ConvertToBigInt(hex, InputType.Hex);
+            var result = Utilities.ConvertToBigInt(hex, InputType.Hex);
             
             Assert.That(result.ToString(), Is.EqualTo(expectedInteger));
         }
@@ -40,7 +40,7 @@ namespace Cryptography.UnitTests
         [Test]
         public void ConvertToBigInt_Decimal_ReturnsInteger()
         {
-            BigInteger? result = Utilities.ConvertToBigInt("189732465783642956328495689237465234654", InputType.Decimal);
+            var result = Utilities.ConvertToBigInt("189732465783642956328495689237465234654", InputType.Decimal);
             
             Assert.That(result.ToString(), Is.EqualTo("189732465783642956328495689237465234654"));
         }
@@ -48,7 +48,7 @@ namespace Cryptography.UnitTests
         [Test]
         public void ConvertToBigInt_Ascii_ReturnsInteger()
         {
-            BigInteger? result = Utilities.ConvertToBigInt("Hello World", InputType.Ascii);
+            var result = Utilities.ConvertToBigInt("Hello World", InputType.Ascii);
             
             Assert.That(result.ToString(), Is.EqualTo("87521618088882533792115812"));
         }
@@ -56,7 +56,7 @@ namespace Cryptography.UnitTests
         [Test]
         public void ConvertToString_Binary_ReturnBinaryString()
         {
-            string result = Utilities.ConvertToString(BigInteger.Parse("5552913087"), InputType.Binary);
+            var result = Utilities.ConvertToString(BigInteger.Parse("5552913087"), InputType.Binary);
 
             Assert.That(result, Is.EqualTo("101001010111110101011101010111111"));
         }
@@ -64,7 +64,7 @@ namespace Cryptography.UnitTests
         [Test]
         public void ConvertToString_Hex_ReturnHexString()
         {
-            string result = Utilities.ConvertToString(BigInteger.Parse("58269367470490382358246580833377976136"), InputType.Hex);
+            var result = Utilities.ConvertToString(BigInteger.Parse("58269367470490382358246580833377976136"), InputType.Hex);
             
             Assert.That(result, Is.EqualTo("2BD6459F82C5B300952C49104881FF48"));
         }
@@ -72,7 +72,7 @@ namespace Cryptography.UnitTests
         [Test]
         public void ConvertToString_Decimal_ReturnDecimalString()
         {
-            string result = Utilities.ConvertToString(BigInteger.Parse("189732465783642956328495689237465234654"), InputType.Decimal);
+            var result = Utilities.ConvertToString(BigInteger.Parse("189732465783642956328495689237465234654"), InputType.Decimal);
             
             Assert.That(result, Is.EqualTo("189732465783642956328495689237465234654"));
         }
@@ -80,7 +80,7 @@ namespace Cryptography.UnitTests
         [Test]
         public void ConvertToString_Ascii_ReturnAsciiString()
         {
-            string result = Utilities.ConvertToString(BigInteger.Parse("87521618088882533792115812"), InputType.Ascii);
+            var result = Utilities.ConvertToString(BigInteger.Parse("87521618088882533792115812"), InputType.Ascii);
             
             Assert.That(result, Is.EqualTo("Hello World"));
         }
@@ -90,7 +90,7 @@ namespace Cryptography.UnitTests
         [TestCase("5552913087", 33)]
         public void NumberOfBits_WhenCalled_ReturnNumber(string number, int bitLength)
         {
-            int result = Utilities.NumberOfBits(BigInteger.Parse(number));
+            var result = Utilities.NumberOfBits(BigInteger.Parse(number));
             
             Assert.That(result, Is.EqualTo(bitLength));
         }
@@ -100,7 +100,7 @@ namespace Cryptography.UnitTests
         [TestCase(false, ConvertResult.Invalid)]
         public void ValidationResult_WhenCalled_ReturnConvertResult(bool state, ConvertResult expectedResult)
         {
-            ConvertResult result = Utilities.ValidationResult(state);
+            var result = Utilities.ValidationResult(state);
             
             Assert.That(result, Is.EqualTo(expectedResult));
         }
@@ -114,7 +114,7 @@ namespace Cryptography.UnitTests
         [TestCase(null, "")]
         public void Capitalise_WhenCalled_ReturnCapitalisedWord(string word, string expectedResult)
         {
-            string result = Utilities.Capitalise(word);
+            var result = Utilities.Capitalise(word);
 
             Assert.That(result, Is.EqualTo(expectedResult));
         }
@@ -128,7 +128,7 @@ namespace Cryptography.UnitTests
         [TestCase(null, null)]
         public void Capitalise_WhenCalled_ReturnTrimedText(string text, string expectedResult)
         {
-            string result = Utilities.TrimText(text);
+            var result = Utilities.TrimText(text);
 
             Assert.That(result, Is.EqualTo(expectedResult));
         }

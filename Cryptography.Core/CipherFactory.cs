@@ -29,7 +29,7 @@ namespace Cryptography.Core
                 throw new ArgumentException("Cannot register null cipher!");
             }
             
-            string name = cipher.Name.ToLower();
+            var name = cipher.Name.ToLower();
             if (Ciphers.ContainsKey(name))
             {
                 throw new ArgumentException("You cannot register ciphers with the same name!");

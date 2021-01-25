@@ -6,13 +6,6 @@ namespace Cryptography.UnitTests
 {
     public class MockCipher : Cipher
     {
-        private const string CipherName = "MockCipher";
-        
-        public MockCipher() : base(CipherName)
-        {
-            
-        }
-
         public override bool IsValidInput(BigInteger value)
         {
             return Utilities.NumberOfBits(value) <= 24;

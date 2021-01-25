@@ -34,7 +34,7 @@ namespace Cryptography.Core
         {
             BigInteger parsedNum = 0;
 
-            foreach(char c in value)
+            foreach(var c in value)
             {
                 parsedNum <<= 1;
                 if (c.Equals('1'))
@@ -52,8 +52,8 @@ namespace Cryptography.Core
 
         private static BigInteger AsciiToInt(string value)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (char c in value)
+            var sb = new StringBuilder();
+            foreach (var c in value)
             {
                 sb.AppendFormat("{0:X2}", (int) c);
             }
@@ -85,7 +85,7 @@ namespace Cryptography.Core
 
         private static string IntToAscii(BigInteger value)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var b in value.ToByteArray())
             {
                 sb.Insert(0, Convert.ToChar(b));
@@ -96,7 +96,7 @@ namespace Cryptography.Core
         
         private static string IntToBin(BigInteger value)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             while (value > 0)
             {
                  sb.Insert(0, value % 2 == 0 ? '0' : '1');
@@ -108,7 +108,7 @@ namespace Cryptography.Core
 
         public static int NumberOfBits(BigInteger value)
         {
-            int number = 0;
+            var number = 0;
             while (value > 0)
             { 
                 value /= 2;

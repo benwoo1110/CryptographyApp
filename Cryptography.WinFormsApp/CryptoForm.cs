@@ -31,7 +31,7 @@ namespace Cryptography.WinFormsApp
 
         public void InitComboBox(ComboBox comboBox, Array objects)
         {
-            foreach (object o in objects)
+            foreach (var o in objects)
             {
                 comboBox.Items.Add(o.ToString() ?? string.Empty);
             }
@@ -41,7 +41,7 @@ namespace Cryptography.WinFormsApp
 
         public void UpdateBits(RichTextBox textBox, Label bitsLabel, InputType textType)
         {
-            String text = Utilities.TrimText(textBox.Text);
+            var text = Utilities.TrimText(textBox.Text);
             
             if (string.IsNullOrEmpty(text))
             {
@@ -50,7 +50,7 @@ namespace Cryptography.WinFormsApp
                 return;
             }
             
-            BigInteger? parsedNumber = Utilities.ConvertToBigInt(text, textType);
+            var parsedNumber = Utilities.ConvertToBigInt(text, textType);
             if (parsedNumber == null)
             {
                 textBox.BackColor = errorRed;

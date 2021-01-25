@@ -76,7 +76,7 @@ namespace Cryptography.WinFormsApp
         private void CalculateBtn_Click(object sender, EventArgs e)
         {
             
-            CipherResult result = cipherFactory.RunCipher(InputText.Text, KeyText.Text);
+            var result = cipherFactory.RunCipher(InputText.Text, KeyText.Text);
 
             if (!result.Input.IsValid())
             {

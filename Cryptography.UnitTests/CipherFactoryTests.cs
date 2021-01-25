@@ -52,7 +52,7 @@ namespace Cryptography.UnitTests
         [Test]
         public void SelectCipher_ValidCipher_CipherIsSelected()
         {
-            bool result = cipherFactory.SelectCipher("MockCipher");
+            var result = cipherFactory.SelectCipher("MockCipher");
             
             Assert.That(result, Is.True);
             Assert.That(cipherFactory.HasAnySelected(), Is.True);
@@ -65,7 +65,7 @@ namespace Cryptography.UnitTests
         [TestCase(null)]
         public void SelectCipher_InvalidCipher_CipherNotSelected(string cipherName)
         {
-            bool result = cipherFactory.SelectCipher(cipherName);
+            var result = cipherFactory.SelectCipher(cipherName);
             
             Assert.That(result, Is.False);
             Assert.That(cipherFactory.HasAnySelected(), Is.False);
@@ -81,7 +81,7 @@ namespace Cryptography.UnitTests
         [TestCase(null, false)]
         public void HasSuchCipher_WhenCalled_ReturnIfCipherPresent(string cipherName, bool expectedResult)
         {
-            bool result = cipherFactory.HasSuchCipher(cipherName);
+            var result = cipherFactory.HasSuchCipher(cipherName);
 
             Assert.That(result, Is.EqualTo(expectedResult));
         }
@@ -97,7 +97,7 @@ namespace Cryptography.UnitTests
         [TestCase("DeCrYpT", Mode.Decrypt)]
         public void SetCipherMode_ValidMode_ReturnTrue(String mode, Mode expectedMode)
         {
-            bool result = cipherFactory.SetCipherMode(mode);
+            var result = cipherFactory.SetCipherMode(mode);
          
             Assert.That(result, Is.True);
             Assert.That(cipherFactory.CipherMode, Is.EqualTo(expectedMode));
@@ -110,9 +110,9 @@ namespace Cryptography.UnitTests
         [TestCase("error")]
         public void SetCipherMode_InvalidMode_ReturnFalse(String mode)
         {
-            Mode previousMode = cipherFactory.CipherMode;
+            var previousMode = cipherFactory.CipherMode;
             
-            bool result = cipherFactory.SetCipherMode(mode);
+            var result = cipherFactory.SetCipherMode(mode);
          
             Assert.That(result, Is.False);
             Assert.That(cipherFactory.CipherMode, Is.EqualTo(previousMode));
@@ -129,7 +129,7 @@ namespace Cryptography.UnitTests
         [TestCase("HEX", InputType.Hex)]
         public void SetTextType_ValidTextType_ReturnTrue(String type, InputType expectedType)
         {
-            bool result = cipherFactory.SetTextType(type);
+            var result = cipherFactory.SetTextType(type);
          
             Assert.That(result, Is.True);
             Assert.That(cipherFactory.TextType, Is.EqualTo(expectedType));
@@ -142,9 +142,9 @@ namespace Cryptography.UnitTests
         [TestCase("error")]
         public void SetTextType_InvalidType_ReturnFalse(String type)
         {
-            InputType previousMode = cipherFactory.TextType;
+            var previousMode = cipherFactory.TextType;
             
-            bool result = cipherFactory.SetTextType(type);
+            var result = cipherFactory.SetTextType(type);
          
             Assert.That(result, Is.False);
             Assert.That(cipherFactory.TextType, Is.EqualTo(previousMode));
@@ -153,11 +153,11 @@ namespace Cryptography.UnitTests
         [Test]
         public void SwitchCipherMode_WhenCalled_ReturnNewMode()
         {
-            Mode newMode = cipherFactory.SwitchCipherMode();
+            var newMode = cipherFactory.SwitchCipherMode();
 
             Assert.That(newMode, Is.EqualTo(Mode.Decrypt));
             
-            Mode newMode2 = cipherFactory.SwitchCipherMode();
+            var newMode2 = cipherFactory.SwitchCipherMode();
 
             Assert.That(newMode2, Is.EqualTo(Mode.Encrypt));
         }
@@ -171,7 +171,7 @@ namespace Cryptography.UnitTests
             cipherFactory.SelectCipher("MockCipher");
             Assert.That(cipherFactory.GetCurrentSelected(), Is.EqualTo("MockCipher"));
             
-            CipherResult result = cipherFactory.RunCipher(input, key);
+            var result = cipherFactory.RunCipher(input, key);
             
             Assert.That(result.Output.Text, Is.EqualTo(output));
         }
@@ -185,7 +185,7 @@ namespace Cryptography.UnitTests
             cipherFactory.SelectCipher("MockCipher");
             Assert.That(cipherFactory.GetCurrentSelected(), Is.EqualTo("MockCipher"));
             
-            CipherResult result = cipherFactory.RunCipher(input, key);
+            var result = cipherFactory.RunCipher(input, key);
             
             Assert.That(result.Input.HasParseError, Is.False);
             Assert.That(result.Key.HasParseError, Is.True);

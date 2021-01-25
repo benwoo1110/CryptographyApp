@@ -20,7 +20,7 @@ namespace Cryptography.UnitTests
         {
             textResult.State = ConvertResult.Valid;
 
-            bool result = textResult.IsValid();
+            var result = textResult.IsValid();
             
             Assert.That(result, Is.True);
         }
@@ -33,7 +33,7 @@ namespace Cryptography.UnitTests
         {
             textResult.State = state;
 
-            bool result = textResult.IsValid();
+            var result = textResult.IsValid();
             
             Assert.That(result, Is.False);
         }
@@ -47,7 +47,7 @@ namespace Cryptography.UnitTests
         {
             textResult.State = state;
 
-            bool result = textResult.HasParseError();
+            var result = textResult.HasParseError();
             
             Assert.That(result, Is.EqualTo(expectedResult));
         }

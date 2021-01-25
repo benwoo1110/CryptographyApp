@@ -295,6 +295,72 @@ namespace Cryptography.Core.Ciphers
             };
         }
 
+        private List<BigInteger> splitKey(BigInteger key)
+        {
+            var keyList = new List<BigInteger>();
+            for (var i = 0; i < 14; i++)
+            {
+                var tempKey = key & 0xFFFFFFFF;
+                keyList.Insert(0, tempKey);
+                key = key >> 32;
+            }
+
+            return keyList;
+        }
+
+        private BigInteger FFunc(BigInteger left)
+        {
+            var temp = sBox[0][(int)(left >> 24)];
+            temp = (temp + sBox[1][(int)(left >> 16 & 0xFF)]) % BigInteger.Pow(2,32);
+            temp = temp ^ sBox[2][(int)(left >> 8 & 0xFF)];
+            temp = (temp + sBox[3][(int)(left & 0xFF)]) % BigInteger.Pow(2,32);
+            return temp;
+        }
+
+        private BigInteger Encryption(BigInteger plaintext)
+        {
+            var left = plaintext >> 32;
+            var right = plaintext & 0xFFFFFFFF;
+            for (var i = 0; i < 16; i++)
+            {
+                left = p[i] ^ left;
+                var left1 = FFunc(left);
+                right = right ^ FFunc(left1);
+                var tempSwap1 = left;
+                left = right;
+                right = tempSwap1;
+            }
+            var tempSwap2 = left;
+            left = right;
+            right = tempSwap2;
+            left = left ^ p[17];
+            right = right ^ p[16];
+            var encrypted = (left << 32) ^ right;
+            return encrypted;
+        }
+
+        private BigInteger Decryption(BigInteger ciphertext)
+        {
+            var left = ciphertext >> 32;
+            var right = ciphertext & 0xFFFFFFFF;
+            for (var i = 17; i > 1 ; i--)
+            {
+                left = p[i] ^ left;
+                var left1 = FFunc(left);
+                right = right ^ FFunc(left1);
+                var tempSwap1 = left;
+                left = right;
+                right = tempSwap1;
+            }
+            var tempSwap2 = left;
+            left = right;
+            right = tempSwap2;
+            left = left ^ p[0];
+            right = right ^ p[1];
+            var decrypted = (left << 32) ^ right;
+            return decrypted;
+        }
+
         public override bool IsValidInput(BigInteger value)
         {
             return Utilities.NumberOfBits(value) <= 64;
@@ -305,44 +371,22 @@ namespace Cryptography.Core.Ciphers
             return Utilities.NumberOfBits(value) >= 32 && Utilities.NumberOfBits(value) <= 448;
         }
 
-        private List<BigInteger> splitKey(BigInteger key)
-        {
-            List<BigInteger> keyList = new List<BigInteger>();
-            for (int i = 0; i < 14; i++)
-            {
-                BigInteger tempKey = key & 0xFFFFFFFF;
-                keyList.Insert(0, tempKey);
-                key = key >> 32;
-            }
-
-            return keyList;
-        }
-
-        private BigInteger FFunc(BigInteger left)
-        {
-            BigInteger temp = sBox[0][(int)(left >> 24)];
-            temp = (temp + sBox[1][(int)(left >> 16 & 0xFF)]) % BigInteger.Pow(2,32);
-            temp = temp ^ sBox[2][(int)(left >> 8 & 0xFF)];
-            temp = (temp + sBox[3][(int)(left & 0xFF)]) % BigInteger.Pow(2,32);
-            return temp;
-        }
-        
         public override BigInteger Encrypt(BigInteger plaintext, BigInteger key)
         {
             Reset();
-            List<BigInteger> keyList = splitKey(key);
+            var keyList = splitKey(key);
 
-            for (int i = 0; i < 18; i++)
+            for (var i = 0; i < 18; i++)
             {
                 p[i] = p[i] ^ keyList[i % 14];
             }
 
-            int k = 0;
+            var k = 0;
             BigInteger data = 0;
 
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
-                BigInteger tempData = Encryption(data);
+                var tempData = Encryption(data);
                 p[k] = tempData >> 32;
                 k += 1;
                 p[k] = tempData & 0xFFFFFFFF;
@@ -350,48 +394,26 @@ namespace Cryptography.Core.Ciphers
                 data = tempData;
             }
 
-            BigInteger encryptedData = Encryption(plaintext);
+            var encryptedData = Encryption(plaintext);
             return encryptedData;
         }
 
-        private BigInteger Encryption(BigInteger plaintext)
-        {
-            BigInteger left = plaintext >> 32;
-            BigInteger right = plaintext & 0xFFFFFFFF;
-            for (int i = 0; i < 16; i++)
-            {
-                left = p[i] ^ left;
-                BigInteger left1 = FFunc(left);
-                right = right ^ FFunc(left1);
-                BigInteger tempSwap1 = left;
-                left = right;
-                right = tempSwap1;
-            }
-            BigInteger tempSwap2 = left;
-            left = right;
-            right = tempSwap2;
-            left = left ^ p[17];
-            right = right ^ p[16];
-            BigInteger encrypted = (left << 32) ^ right;
-            return encrypted;
-        }
-        
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
             Reset();
-            List<BigInteger> keyList = splitKey(key);
+            var keyList = splitKey(key);
             
-            for (int i = 0; i < 18; i++)
+            for (var i = 0; i < 18; i++)
             {
                 p[i] = p[i] ^ keyList[i % 14];
             }
 
-            int k = 0;
+            var k = 0;
             BigInteger data = 0;
 
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
-                BigInteger tempData = Encryption(data);
+                var tempData = Encryption(data);
                 p[k] = tempData >> 32;
                 k += 1;
                 p[k] = tempData & 0xFFFFFFFF;
@@ -399,30 +421,8 @@ namespace Cryptography.Core.Ciphers
                 data = tempData;
             }
 
-            BigInteger decryptionData = Decryption(ciphertext);
+            var decryptionData = Decryption(ciphertext);
             return decryptionData;
-        }
-
-        private BigInteger Decryption(BigInteger ciphertext)
-        {
-            BigInteger left = ciphertext >> 32;
-            BigInteger right = ciphertext & 0xFFFFFFFF;
-            for (int i = 17; i > 1 ; i--)
-            {
-                left = p[i] ^ left;
-                BigInteger left1 = FFunc(left);
-                right = right ^ FFunc(left1);
-                BigInteger tempSwap1 = left;
-                left = right;
-                right = tempSwap1;
-            }
-            BigInteger tempSwap2 = left;
-            left = right;
-            right = tempSwap2;
-            left = left ^ p[0];
-            right = right ^ p[1];
-            BigInteger decrypted = (left << 32) ^ right;
-            return decrypted;
         }
     }
 }

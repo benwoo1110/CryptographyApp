@@ -7,8 +7,6 @@ namespace Cryptography.Core.Ciphers
     public class Twofish : Cipher
 
     {
-        private readonly object sessionKey;
-
         /**
          * Constants
          */
@@ -35,10 +33,8 @@ namespace Cryptography.Core.Ciphers
         /**
          * Fixed 8x8 permutation S-boxes
          */
-        private static readonly byte[,] P =
-        {
-            {
-                // p0
+        private static readonly byte[,] P = {
+            { // p0
                 0xA9, 0x67, 0xB3, 0xE8,
                 0x04, 0xFD, 0xA3, 0x76,
                 0x9A, 0x92, 0x80, 0x78,
@@ -104,8 +100,7 @@ namespace Cryptography.Core.Ciphers
                 0x6F, 0x9D, 0x36, 0x42,
                 0x4A, 0x5E, 0xC1, 0xE0
             },
-            {
-                // p1
+            { // p1
                 0x75, 0xF3, 0xC6, 0xF4,
                 0xDB, 0x7B, 0xFB, 0xC8,
                 0x4A, 0xD3, 0xE6, 0x6B,
@@ -239,12 +234,12 @@ namespace Cryptography.Core.Ciphers
         private static int Mx_X(int x)
         {
             return x ^ LFSR2(x);
-        } // 5B
+        }
 
         private static int Mx_Y(int x)
         {
             return x ^ LFSR1(x) ^ LFSR2(x);
-        } // EF
+        }
 
         private static int GetLength(BigInteger num)
         {
@@ -479,7 +474,7 @@ namespace Cryptography.Core.Ciphers
         /**
          * Kye gen stuff
          */
-        public static object MakeKey(BigInteger key)
+        private static object MakeKey(BigInteger key)
         {
             var bitLength = GetLength(key);
             var length = bitLength / 8;
@@ -630,7 +625,7 @@ namespace Cryptography.Core.Ciphers
             return sessionKey;
         }
 
-        private BigInteger BlockEncrypt(BigInteger input, int inOffset, object sessionKey)
+        private static BigInteger BlockEncrypt(BigInteger input, int inOffset, object sessionKey)
         {
             // extract S-box and session key
             var sk = (object[]) sessionKey;
@@ -729,7 +724,7 @@ namespace Cryptography.Core.Ciphers
             return result;
         }
 
-        public BigInteger BlockDecrypt(BigInteger input, int inOffset, object sessionKey)
+        private static BigInteger BlockDecrypt(BigInteger input, int inOffset, object sessionKey)
         {
             // extract S-box and session key
             var sk = (object[]) sessionKey;

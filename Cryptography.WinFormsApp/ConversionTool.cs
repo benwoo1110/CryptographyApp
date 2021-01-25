@@ -55,7 +55,7 @@ namespace Cryptography.WinFormsApp
 
         private void ConvertBtn_Click(object sender, EventArgs e)
         {
-            BigInteger? parsedNumber = Utilities.ConvertToBigInt(InputText.Text, fromType);
+            var parsedNumber = Utilities.ConvertToBigInt(InputText.Text, fromType);
             if (parsedNumber == null)
             {
                 ShowErrorMessage("Invalid Input", "Invalid Input");

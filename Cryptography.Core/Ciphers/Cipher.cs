@@ -14,12 +14,6 @@ namespace Cryptography.Core.Ciphers
         {
             Name = GetType().Name;
         }
-        
-        [Obsolete("Derive cipher name from classname itself.")]
-        protected Cipher(string name)
-        {
-            Name = name;
-        }
 
         /*
          * Ensure that number of bits for plaintext/ciphertext can be used for algorithm.

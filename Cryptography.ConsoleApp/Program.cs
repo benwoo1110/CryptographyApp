@@ -14,24 +14,24 @@ namespace Cryptography.ConsoleApp
             Console.WriteLine(Utilities.ConvertToString(BigInteger.Parse("198952191833350491859446101038880328919")));
 
             
-            CipherFactory cipherFactory = new CipherFactory();
+            var cipherFactory = new CipherFactory();
 
             cipherFactory.RegisterCipher(new Blowfish());
             cipherFactory.RegisterCipher(new IDEA());
             cipherFactory.RegisterCipher(new Twofish());
             cipherFactory.RegisterCipher(new RC5());
             
-            Menu cipherMenu = new Menu(
+            var cipherMenu = new Menu(
                 "------ Select the cipher ------",
                 cipherFactory.GetAvailableCiphers().ToArray()
             );
 
-            Menu typeMenu = new Menu(
+            var typeMenu = new Menu(
                 "------ Select input type ------",
                 Enum.GetNames(typeof(InputType))
             );
             
-            Menu modeMenu = new Menu(
+            var modeMenu = new Menu(
                 "------ Select the mode ------",
                 Enum.GetNames(typeof(Mode))
             );
@@ -44,10 +44,10 @@ namespace Cryptography.ConsoleApp
 
                 ConsoleHelper.EmptyLine();
                 Console.WriteLine("------ Please enter the input and key ------");
-                string input = ConsoleHelper.GetInput("Enter input: ");
-                string key = ConsoleHelper.GetInput("Enter key: ");
+                var input = ConsoleHelper.GetInput("Enter input: ");
+                var key = ConsoleHelper.GetInput("Enter key: ");
                 
-                CipherResult result = cipherFactory.RunCipher(input, key);
+                var result = cipherFactory.RunCipher(input, key);
                 
                 ConsoleHelper.EmptyLine();
                 Console.WriteLine("------ Cipher Result Report ------");

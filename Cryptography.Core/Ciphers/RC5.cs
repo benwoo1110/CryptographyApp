@@ -22,7 +22,8 @@ namespace Cryptography.Core.Ciphers
         private BigInteger PTblock2 { get; set; }
         private BigInteger CTblock1 { get; set; }
         private BigInteger CTblock2 { get; set; }
-        public RC5() : base()
+        
+        public RC5()
         {
             Words = 32;
             WordLengthByte = Words / 8;

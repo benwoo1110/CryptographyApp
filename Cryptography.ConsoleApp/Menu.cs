@@ -27,7 +27,7 @@ namespace Cryptography.ConsoleApp
         {
             while (true)
             {
-                int input = ConsoleHelper.GetInput("Enter option: ", Convert.ToInt32);
+                var input = ConsoleHelper.GetInput("Enter option: ", Convert.ToInt32);
                 if (!IsInRange(input))
                 {
                     Console.WriteLine($"Please enter a number between 0 and {contents.Length}!");

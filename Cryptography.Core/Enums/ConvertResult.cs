@@ -7,6 +7,7 @@ namespace Cryptography.Core.Enums
         Valid,
         Invalid,
         ParseError,
+        RunTimeError,
         Unknown
     }
 }

@@ -11,42 +11,49 @@ namespace Cryptography.ConsoleApp
         {
             CipherFactory cipherFactory = new CipherFactory();
 
-            // Init cipher algorithms
             cipherFactory.RegisterCipher(new Blowfish());
             cipherFactory.RegisterCipher(new IDEA());
+            cipherFactory.RegisterCipher(new Twofish());
+            cipherFactory.RegisterCipher(new RC5());
+            
+            Menu cipherMenu = new Menu(
+                "------ Select the cipher ------",
+                cipherFactory.GetAvailableCiphers().ToArray()
+            );
 
-            // Set cipher algorithm to use
-            if (cipherFactory.SelectCipher("IDEA"))
+            Menu typeMenu = new Menu(
+                "------ Select input type ------",
+                Enum.GetNames(typeof(InputType))
+            );
+            
+            Menu modeMenu = new Menu(
+                "------ Select the mode ------",
+                Enum.GetNames(typeof(Mode))
+            );
+
+            while (true)
             {
-                Console.WriteLine("Selected cipher!");
+                cipherFactory.SelectCipher(cipherMenu.RunMenuOption());
+                cipherFactory.SetCipherMode(modeMenu.RunMenuOption());
+                cipherFactory.SetTextType(typeMenu.RunMenuOption());
+
+                ConsoleHelper.EmptyLine();
+                Console.WriteLine("------ Please enter the input and key ------");
+                string input = ConsoleHelper.GetInput("Enter input: ");
+                string key = ConsoleHelper.GetInput("Enter key: ");
+                
+                CipherResult result = cipherFactory.RunCipher(input, key);
+                
+                ConsoleHelper.EmptyLine();
+                Console.WriteLine("------ Cipher Result Report ------");
+                Console.WriteLine(result);
+                
+                ConsoleHelper.EmptyLine();
+                if (!ConsoleHelper.Confirm("Do you want to run another cipher?"))
+                {
+                    ConsoleHelper.ExitProgram();
+                }
             }
-            else
-            {
-                Console.WriteLine("Invalid cipher!");
-            }
-
-            // Set cipher mode -> Encrypt / Decrypt
-            cipherFactory.SetCipherMode("Encrypt");
-
-            // Text type:
-            // Decimal -> 1234567890
-            // Hex -> 1234567890ABCDE
-            // Binary -> 01
-            // Ascii -> A -> table to convert to hex
-            cipherFactory.SetTextType("Binary");
-
-            string input = "10101010002";
-            string key = "11101100";
-
-            // Run the cipher algorithm
-            CipherResult result = cipherFactory.RunCipher(input, key);
-
-            if (result.HasInvalidInputAndKey())
-            {
-                Console.WriteLine("Invalid input/key.");
-            }
-
-            Console.WriteLine(result.ToString());
         }
     }
 }

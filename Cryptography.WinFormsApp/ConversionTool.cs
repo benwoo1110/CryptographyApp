@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using System.Windows.Forms;
 using Cryptography.Core;
 using Cryptography.Core.Enums;
 

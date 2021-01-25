@@ -9,7 +9,7 @@ namespace Cryptography.WinFormsApp
 {
     public partial class CipherTool : CryptoForm
     {
-        private CipherFactory cipherFactory;
+        private readonly CipherFactory cipherFactory;
         
         public CipherTool(CryptoForm parentForm) : base(parentForm)
         {
@@ -22,7 +22,7 @@ namespace Cryptography.WinFormsApp
             cipherFactory.RegisterCipher(new RC5());
             cipherFactory.RegisterCipher(new Twofish());
             
-            InitComboBox(CipherAlgorithmBox, cipherFactory.GetAvailableCiphers());
+            InitComboBox(CipherAlgorithmBox, cipherFactory.GetAvailableCiphers().ToArray());
             InitComboBoxWithInputType(TextTypeBox);
             
             ApplyModeButton();
@@ -37,19 +37,17 @@ namespace Cryptography.WinFormsApp
         {
             if (!cipherFactory.SelectCipher(CipherAlgorithmBox.Text))
             {
-                // TODO: show error message box
+                ShowErrorMessage("Select Cipher Error", $"There was an error setting your cipher to {CipherAlgorithmBox.Text}!");
             }
         }
         
         private void TextTypeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            if (!Enum.TryParse(TextTypeBox.Text, out InputType parsed))
+            if (!cipherFactory.SetTextType(TextTypeBox.Text))
             {
-                // TODO: show error message box
+                ShowErrorMessage("Text Type Error", $"There was an error setting your text type to {TextTypeBox.Text}!");
+                return;
             }
-
-            cipherFactory.TextType = parsed;
             
             UpdateBits(InputText, InputBits);
             UpdateBits(KeyText, KeyBits);
@@ -80,25 +78,28 @@ namespace Cryptography.WinFormsApp
             
             CipherResult result = cipherFactory.RunCipher(InputText.Text, KeyText.Text);
 
-            if (result.HasParsingErrors())
+            if (!result.Input.IsValid())
             {
-                ShowErrorMessage("Parse Error", "There is an error in the format of your text and/or key!");
+                ShowErrorMessage($"Input Parse Error", $"There is an error in the format of your {InputTextName(result)}!");
                 return;
             }
-
-            if (result.HasInvalidInputAndKey())
+            if (!result.Key.IsValid())
             {
-                ShowErrorMessage("Invalid Input", "text and/or key does not conform to the requirements of the cipher!");
+                ShowErrorMessage($"Key Parse Error", $"There is an error in the format of your Key!");
                 return;
             }
-
             if (!result.HasOutput())
             {
                 ShowErrorMessage("Cipher Error", "Hmmmm... there was an error generating the output for your cipher!");
                 return;
             }
 
-            OutputText.Text = result.OutputText;
+            OutputText.Text = result.Output.Text;
+        }
+
+        private string InputTextName(CipherResult result)
+        {
+            return (result.CipherMode == Mode.Encrypt) ? "plain text" : "cipher text";
         }
 
         private void UpdateBits(RichTextBox textBox, Label bitsLabel)
@@ -108,7 +109,7 @@ namespace Cryptography.WinFormsApp
 
         private void SwitchModeButton()
         {
-            cipherFactory.CipherMode = cipherFactory.CipherMode == Mode.Encrypt ? Mode.Decrypt : Mode.Encrypt; 
+            cipherFactory.SwitchCipherMode();
             ApplyModeButton();
         }
 

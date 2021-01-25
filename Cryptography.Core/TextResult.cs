@@ -42,7 +42,8 @@ namespace Cryptography.Core
         {
             return Name + " Text: " + Text + "\n"
                    + Name + " State: " + State + "\n"
-                   + Name + " Number: " + Number;
+                   + Name + " Number: " + Number + "\n" 
+                   + Name + " Bits Length:" + Utilities.NumberOfBits(Number);
         }
     }
 }

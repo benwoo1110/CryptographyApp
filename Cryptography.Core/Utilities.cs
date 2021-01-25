@@ -15,7 +15,7 @@ namespace Cryptography.Core
                 switch (type)
                 {
                     case InputType.Hex:
-                        return BigInteger.Parse("0" + RemoveLeadingValue(value, "0x"), NumberStyles.HexNumber);
+                        return BigInteger.Parse(RemoveLeadingValue(value, "0x"), NumberStyles.HexNumber);
                     case InputType.Decimal:
                         return BigInteger.Parse(value, NumberStyles.Integer);
                     case InputType.Binary:

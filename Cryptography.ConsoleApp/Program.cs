@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using Cryptography.Core;
 using Cryptography.Core.Ciphers;
 using Cryptography.Core.Enums;
@@ -9,13 +10,16 @@ namespace Cryptography.ConsoleApp
     {
         static void Main(string[] args)
         {
+            Console.WriteLine(Utilities.ConvertToString(BigInteger.Parse("-141330175087587971603928506392887882537")));
+            Console.WriteLine(Utilities.ConvertToString(BigInteger.Parse("198952191833350491859446101038880328919")));
+
+            
             CipherFactory cipherFactory = new CipherFactory();
 
             cipherFactory.RegisterCipher(new Blowfish());
             cipherFactory.RegisterCipher(new IDEA());
             cipherFactory.RegisterCipher(new Twofish());
             cipherFactory.RegisterCipher(new RC5());
-            cipherFactory.RegisterCipher(new TwoFishNew());
             
             Menu cipherMenu = new Menu(
                 "------ Select the cipher ------",

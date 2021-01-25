@@ -46,12 +46,12 @@ namespace Cryptography.Core.Ciphers
 
         public override bool IsValidInput(BigInteger value)
         {
-            return Utilities.NumberOfBits(value) == 32;
+            return Utilities.NumberOfBits(value) <= 64; //16 hex digit = 64 bits
         }
 
         public override bool IsValidKey(BigInteger value)
         {
-            return Utilities.NumberOfBits(value) == 64;
+            return Utilities.NumberOfBits(value) <= 128;  //16 bytes = 16 * 4 = 128 bits
         }
 
         public double Odd (double value)

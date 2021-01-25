@@ -54,19 +54,9 @@ namespace Cryptography.Core.Ciphers
             return Utilities.NumberOfBits(value) <= 128;  //16 bytes = 16 * 4 = 128 bits
         }
 
-        public double Odd (double value)
-        {
-            return 2 * Math.Floor(value / 2) + 1;
-        }
-
         private BigInteger AddModulo(BigInteger num1, BigInteger num2)
         {
             return (num1 + num2) % (BigInteger) Math.Pow(2, 32);
-        }
-
-        private BigInteger Xor(BigInteger num1, BigInteger num2)
-        {
-            return num1 ^ num2;
         }
 
         public BigInteger RotateLeft(BigInteger value, BigInteger count)
@@ -173,6 +163,7 @@ namespace Cryptography.Core.Ciphers
 
         public override BigInteger Decrypt(BigInteger ciphertext, BigInteger key)
         {
+            DivideKey(key);
             RC5_SETUP(key);
             DivideCT(ciphertext);
 

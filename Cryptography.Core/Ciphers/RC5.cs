@@ -78,7 +78,7 @@ namespace Cryptography.Core.Ciphers
         void DivideCT(BigInteger ct)
         {
             CTblock1 = ct >> 16;
-            CTblock2 = ct - PTblock1 << 16;
+            CTblock2 = ct - CTblock1 << 16;
         }
 
         void DivideKey(BigInteger key)
@@ -103,11 +103,11 @@ namespace Cryptography.Core.Ciphers
 
         void RC5_SETUP(BigInteger key)
         {
-            // length of word is bits, w = 16
+            // length of word is bits, w = 32
             // magic constants, p = 0xb7e15163
             // magic constants, q = 0x9e3779b9
             // number of rounds, r = 12
-            // length of key, b = 4
+            // length of key, b = 16
             // length of the key in words, c = max(1, ceil(8 * b/w))
             // number of round subkeys, t = 2 * (r+1)
             // Code is designed to work with w = 32, r = 12, and b = 16'
@@ -129,7 +129,6 @@ namespace Cryptography.Core.Ciphers
             BigInteger A = 0;
             BigInteger B = 0;
 
-            //need to take a look at the source code, dont quite understand A = S[z] part
             for (int i = 0; i < 12; i++)
             {
                 A = SubkeyL[z] = RotateLeft(AddModulo(SubkeyL[z], AddModulo(A, B)), 3);
@@ -148,12 +147,12 @@ namespace Cryptography.Core.Ciphers
             DividePT(plaintext);
 
 
-            PTblock1 = AddModulo(PTblock1, SubkeyL[0]);        //conversion error
+            PTblock1 = AddModulo(PTblock1, SubkeyL[0]);
             PTblock2 = AddModulo(PTblock2, SubkeyL[1]);
 
             for (int i = 1; i <= 12; i++)
             {
-                PTblock1 = RotateLeft(PTblock1 ^ PTblock2, PTblock2) + SubkeyL[2 * i];    //conversion error
+                PTblock1 = RotateLeft(PTblock1 ^ PTblock2, PTblock2) + SubkeyL[2 * i];
                 PTblock2 = RotateLeft(PTblock2 ^ PTblock1, PTblock1) + SubkeyL[2 * i + 1];
             }
 
@@ -169,7 +168,7 @@ namespace Cryptography.Core.Ciphers
 
             for (int i = 12; i > 0; i--)
             {
-                CTblock2 = RotateRight(CTblock2 - SubkeyL[2 * i + 1], CTblock1) ^ CTblock1;  //conversion error
+                CTblock2 = RotateRight(CTblock2 - SubkeyL[2 * i + 1], CTblock1) ^ CTblock1;
                 CTblock1 = RotateRight(CTblock1 - SubkeyL[2 * i], CTblock2) ^ CTblock2;
             }
             PTblock2 = CTblock2 - SubkeyL[1];

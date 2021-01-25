@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Cryptography.Core.Ciphers
 {
@@ -8,7 +9,13 @@ namespace Cryptography.Core.Ciphers
          * Cryptography algorithm name.
          */
         public string Name { get; }
+
+        protected Cipher()
+        {
+            Name = GetType().Name;
+        }
         
+        [Obsolete("Derive cipher name from classname itself.")]
         protected Cipher(string name)
         {
             Name = name;

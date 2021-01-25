@@ -37,13 +37,12 @@ namespace Cryptography.Core
         {
             input = Utilities.TrimText(input);
             key = Utilities.TrimText(key);
+            Result = new CipherResult(SelectedCipher.Name, TextType, CipherMode, input, key);
 
             if (SelectedCipher == null || string.IsNullOrEmpty(input) || string.IsNullOrEmpty(key))
             {
                 return false;
             }
-
-            Result = new CipherResult(SelectedCipher.Name, TextType, CipherMode, input, key);
             return true;
         }
 
@@ -57,11 +56,10 @@ namespace Cryptography.Core
             }
             Result.Input.Number = (BigInteger) parsedInput;
 
-
             BigInteger? parsedKey = Utilities.ConvertToBigInt(Result.Key.Text, TextType);
             if (parsedKey == null)
             {
-                Result.Input.State = ConvertResult.ParseError;
+                Result.Key.State = ConvertResult.ParseError;
                 return false;
             }
             Result.Key.Number = (BigInteger) parsedKey;

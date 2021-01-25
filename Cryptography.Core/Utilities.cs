@@ -12,17 +12,15 @@ namespace Cryptography.Core
         {
             try
             {
-                switch (type)
+                value = value.Replace(" ", "");
+                return type switch
                 {
-                    case InputType.Hex:
-                        return BigInteger.Parse(RemoveLeadingValue(value, "0x"), NumberStyles.HexNumber);
-                    case InputType.Decimal:
-                        return BigInteger.Parse(value, NumberStyles.Integer);
-                    case InputType.Binary:
-                        return BinToInt(value);
-                    case InputType.Ascii:
-                        return AsciiToInt(value);
-                }
+                    InputType.Hex => BigInteger.Parse(RemoveLeadingValue(value, "0x"), NumberStyles.HexNumber),
+                    InputType.Decimal => BigInteger.Parse(value, NumberStyles.Integer),
+                    InputType.Binary => BinToInt(value),
+                    InputType.Ascii => AsciiToInt(value),
+                    _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                };
             }
             catch (Exception)
             {
@@ -68,7 +66,7 @@ namespace Cryptography.Core
             switch (type)
             {
                 case InputType.Hex:
-                    return value.ToString("X");
+                    return RemoveLeadingValue(value.ToString("X"), "0");
                 case InputType.Decimal:
                     return value.ToString();
                 case InputType.Binary:

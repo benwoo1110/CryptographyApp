@@ -36,8 +36,8 @@ namespace Cryptography.Core.Ciphers
             MagicConst2 = 0x9e3779b9;
 
             TempL = new BigInteger[] { 0, 0, 0, 0 }; //temporary list
-            SubkeyL = new BigInteger[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,}; //26 subkeys
-            KeyL = new BigInteger[] { 0, 0, 0, 0, 0, 0, 0, 0};
+            SubkeyL = new BigInteger[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; //26 subkeys
+            KeyL = new BigInteger[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
             PTblock1 = 0;
             PTblock2 = 0;
             CTblock1 = 0;
@@ -46,7 +46,7 @@ namespace Cryptography.Core.Ciphers
 
         public override bool IsValidInput(BigInteger value)
         {
-            return Utilities.NumberOfBits(value) <= 64; //16 hex digit = 64 bits
+            return Utilities.NumberOfBits(value) <= 32; //16 hex digit = 64 bits
         }
 
         public override bool IsValidKey(BigInteger value)
@@ -93,14 +93,22 @@ namespace Cryptography.Core.Ciphers
 
         void DivideKey(BigInteger key)
         {
-            KeyL[0] = key >> 56;
-            KeyL[1] = (key >> 48) & 0xFF;
-            KeyL[2] = (key >> 40) & 0xFFFF;
-            KeyL[3] = (key >> 32) & 0xFFFFFF;
-            KeyL[4] = (key >> 24) & 0xFFFFFFFF;
-            KeyL[5] = (key >> 16) & 0xFFFFFFFFFF;
-            KeyL[6] = (key >> 8) & 0xFFFFFFFFFFFF;
-            KeyL[7] = key & 0xFFFFFFFFFFFFFF;
+            KeyL[0] = key >> 120;
+            KeyL[1] = (key >> 112) & 0xFF;
+            KeyL[2] = (key >> 104) & 0xFF;
+            KeyL[3] = (key >> 96) & 0xFF;
+            KeyL[4] = (key >> 88) & 0xFF;
+            KeyL[5] = (key >> 80) & 0xFF;
+            KeyL[6] = (key >> 72) & 0xFF;
+            KeyL[7] = (key >> 64) & 0xFF;
+            KeyL[8] = (key >> 56) & 0xFF;
+            KeyL[9] = (key >> 48) & 0xFF;
+            KeyL[10] = (key >> 40) & 0xFF;
+            KeyL[11] = (key >> 32) & 0xFF;
+            KeyL[12] = (key >> 24) & 0xFF;
+            KeyL[13] = (key >> 16) & 0xFF;
+            KeyL[14] = (key >> 8) & 0xFF;
+            KeyL[15] = key & 0xFF;
         }
 
         void RC5_SETUP(BigInteger key)
@@ -117,7 +125,7 @@ namespace Cryptography.Core.Ciphers
             //convert secret key K from bytes to words 
             for (int i = KeyLengthByte - 1; i != -1; i--)
             {
-                TempL[i % WordLengthByte] = AddModulo(RotateLeft(TempL[WordLengthByte % i], 8), KeyL[i]);  //conversion problems
+                TempL[i % WordLengthByte] = AddModulo(RotateLeft(TempL[i % WordLengthByte], 8), KeyL[i]);  //conversion problems
             }
 
             SubkeyL[0] = MagicConst1;

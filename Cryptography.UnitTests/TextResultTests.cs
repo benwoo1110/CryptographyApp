@@ -26,7 +26,7 @@ namespace Cryptography.UnitTests
         }
         
         [Test]
-        [TestCase(ConvertResult.Invalid)]
+        [TestCase(ConvertResult.InvalidLength)]
         [TestCase(ConvertResult.Unknown)]
         [TestCase(ConvertResult.ParseError)]
         public void IsValid_WhenInValid_ReturnFalse(ConvertResult state)
@@ -40,7 +40,7 @@ namespace Cryptography.UnitTests
         
         [Test]
         [TestCase(ConvertResult.Valid, false)]
-        [TestCase(ConvertResult.Invalid, false)]
+        [TestCase(ConvertResult.InvalidLength, false)]
         [TestCase(ConvertResult.Unknown, false)]
         [TestCase(ConvertResult.ParseError, true)]
         public void HasParseError_WhenCalled_ReturnIfHasError(ConvertResult state, bool expectedResult)

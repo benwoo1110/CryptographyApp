@@ -17,7 +17,7 @@ namespace Cryptography.UnitTests
 
         [Test]
         [TestCase(ConvertResult.Valid, ConvertResult.Valid, false)]
-        [TestCase(ConvertResult.Invalid, ConvertResult.Invalid, false)]
+        [TestCase(ConvertResult.InvalidLength, ConvertResult.InvalidLength, false)]
         [TestCase(ConvertResult.ParseError, ConvertResult.Valid, true)]
         [TestCase(ConvertResult.Valid, ConvertResult.ParseError, true)]
         [TestCase(ConvertResult.ParseError, ConvertResult.ParseError, true)]

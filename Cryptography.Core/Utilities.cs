@@ -120,7 +120,7 @@ namespace Cryptography.Core
         
         public static ConvertResult ValidationResult(bool result)
         {
-            return result ? ConvertResult.Valid : ConvertResult.Invalid;
+            return result ? ConvertResult.Valid : ConvertResult.InvalidLength;
         }
 
         public static string Capitalise(string word)

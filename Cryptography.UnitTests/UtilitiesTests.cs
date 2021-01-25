@@ -97,7 +97,7 @@ namespace Cryptography.UnitTests
 
         [Test]
         [TestCase(true, ConvertResult.Valid)]
-        [TestCase(false, ConvertResult.Invalid)]
+        [TestCase(false, ConvertResult.InvalidLength)]
         public void ValidationResult_WhenCalled_ReturnConvertResult(bool state, ConvertResult expectedResult)
         {
             var result = Utilities.ValidationResult(state);

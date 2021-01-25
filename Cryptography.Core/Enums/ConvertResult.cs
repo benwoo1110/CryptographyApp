@@ -1,11 +1,9 @@
-﻿using System.Text;
-
-namespace Cryptography.Core.Enums
+﻿namespace Cryptography.Core.Enums
 {
     public enum ConvertResult
     {
         Valid,
-        Invalid,
+        InvalidLength,
         ParseError,
         RunTimeError,
         Unknown

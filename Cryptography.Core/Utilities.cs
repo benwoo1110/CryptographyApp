@@ -12,12 +12,12 @@ namespace Cryptography.Core
         {
             try
             {
-                value = value.Replace(" ", "");
+                var replaced = value.Replace(" ", "");
                 return type switch
                 {
-                    InputType.Hex => BigInteger.Parse(RemoveLeadingValue(value, "0x"), NumberStyles.HexNumber),
-                    InputType.Decimal => BigInteger.Parse(value, NumberStyles.Integer),
-                    InputType.Binary => BinToInt(value),
+                    InputType.Hex => BigInteger.Parse(RemoveLeadingValue(replaced, "0x"), NumberStyles.HexNumber),
+                    InputType.Decimal => BigInteger.Parse(replaced, NumberStyles.Integer),
+                    InputType.Binary => BinToInt(replaced),
                     InputType.Ascii => AsciiToInt(value),
                     _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
                 };

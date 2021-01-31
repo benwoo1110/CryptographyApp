@@ -62,12 +62,49 @@ namespace Cryptography.Core.Ciphers
 
         public BigInteger RotateLeft(BigInteger value, BigInteger count)
         {
-            return (value << (int) count) | (value >> (32 - (int) count));
-}
+            return (value << ((int) count & (32-1))) | (value >> (32 - ((int) count & (32-1))));
+        }
 
         public BigInteger RotateRight(BigInteger value, BigInteger count)  //conversion problems, still facing issue
         {
-            return (value >> (int) count) | (value << (32 - (int) count));
+            return (value >> ((int) count & (32 - 1))) | (value << (32 - ((int)count & (32 - 1))));
+        }
+
+        public Array ConvertToArray(BigInteger value)
+        {
+            //if (n == 0) return new int[1] { 0 };
+
+            var digits = new List<int>();
+
+            for (; value != 0; value /= 10)
+            {
+                digits.Add((int)value % 10);
+            }
+
+            var arr = digits.ToArray();
+            Array.Reverse(arr);
+            return arr;
+
+        }
+
+        public Array RotateLeftArray<T>(BigInteger[] array, BigInteger count)
+        {
+            T[] temp = new T[(int)count];
+            Array.Copy(array, 0, temp, 0, (int)count);
+            Array.Copy(array, (int)count, array, 0, array.Length - (int)count);
+            Array.Copy(temp, 0, array, array.Length - (int)count, (int)count);
+            return array;
+
+        }
+
+        public BigInteger ConvertToBigInt<T>(BigInteger[] array, BigInteger count)
+        {
+            BigInteger big_int = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                big_int += array[i] * (BigInteger) Math.Pow(10, array.Length - i - 1);
+            }
+            return big_int;
         }
 
         void DividePT(BigInteger pt)

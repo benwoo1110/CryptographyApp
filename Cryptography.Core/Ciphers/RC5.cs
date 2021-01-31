@@ -89,15 +89,15 @@ namespace Cryptography.Core.Ciphers
 
         public Array RotateLeftArray<T>(BigInteger[] array, BigInteger count)
         {
-            T[] temp = new T[(int)count];
-            Array.Copy(array, 0, temp, 0, (int)count);
-            Array.Copy(array, (int)count, array, 0, array.Length - (int)count);
-            Array.Copy(temp, 0, array, array.Length - (int)count, (int)count);
+            T[] temp = new T[(int)count & (32 - 1)];
+            Array.Copy(array, 0, temp, 0, (int)count & (32 - 1));
+            Array.Copy(array, (int)count & (32 - 1), array, 0, array.Length - (int)count & (32 - 1));
+            Array.Copy(temp, 0, array, array.Length - (int)count & (32 - 1), (int)count & (32 - 1));
             return array;
 
         }
 
-        public BigInteger ConvertToBigInt<T>(BigInteger[] array, BigInteger count)
+        public BigInteger ConvertToBigInt<T>(BigInteger[] array)
         {
             BigInteger big_int = 0;
             for (int i = 0; i < array.Length; i++)

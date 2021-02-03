@@ -1,29 +1,22 @@
-# README #
+# Cryptography App
+![Main Screen Interface](app-screenshots/main-screen.png)
 
-This README would normally document whatever steps are necessary to get your application up and running.
+As students of Cyber Security course, we researched on cryptographic algorithms and its applications
 
-### What is this repository for? ###
+## Ciphers Available
+*  International Data Encryption Algorithm (IDEA) 
+*  Blowfish
+*  Twofish
+*  RC5
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+## Features
 
-### How do I get set up? ###
+### GUI for interacting with the ciphers
+Encrypt and Decrypt using different algorithm with an effective user interface. 
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+![Main Screen Interface](app-screenshots/cipher-screen.png)
 
-### Contribution guidelines ###
+### Number system conversion tool
+Convert in any combination between HEX, ASCII, Decimal and Binary numbers.
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+![Main Screen Interface](app-screenshots/convert-screen.png)
